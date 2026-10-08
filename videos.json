@@ -1,0 +1,41 @@
+{
+  "ativo": true,
+  "marca": "Use Arcanju",
+  "promo": "Leve 2 por R$ 249,90 + frete grátis",
+  "textoBotao": "Comprar",
+  "cores": {
+    "principal": "#6b1a20",
+    "botao": "#1f9d4c"
+  },
+  "bolha": {
+    "ativa": true,
+    "paginas": [
+      "home",
+      "categoria"
+    ],
+    "lado": "direita",
+    "distanciaBaixo": 20,
+    "tamanho": 84,
+    "etiqueta": "Ver vídeo",
+    "videos": [],
+    "noProdutoUsarVideosDoProduto": true
+  },
+  "carrossel": {
+    "ativo": true,
+    "paginas": [
+      "home",
+      "categoria",
+      "produto"
+    ],
+    "titulo": "Descubra cada detalhe em vídeo",
+    "videos": []
+  },
+  "produto": {
+    "ativo": true,
+    "titulo": "Descubra cada detalhe em vídeo",
+    "maximo": 3,
+    "porProduto": {},
+    "padrao": []
+  },
+  "videos": []
+}

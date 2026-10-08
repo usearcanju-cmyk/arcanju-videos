@@ -1,0 +1,104 @@
+{
+  "ativo": true,
+  "marca": "Use Arcanju",
+  "promo": "Leve 2 por R$ 249,90 + frete grátis",
+  "textoBotao": "Comprar",
+  "cores": {
+    "principal": "#6b1a20",
+    "botao": "#1f9d4c"
+  },
+  "bolha": {
+    "ativa": true,
+    "paginas": [
+      "home",
+      "categoria"
+    ],
+    "lado": "direita",
+    "distanciaBaixo": 20,
+    "tamanho": 84,
+    "etiqueta": "Ver vídeo",
+    "videos": [
+      "exemplo-1",
+      "exemplo-2",
+      "exemplo-3",
+      "exemplo-4",
+      "exemplo-5",
+      "exemplo-6"
+    ],
+    "noProdutoUsarVideosDoProduto": true
+  },
+  "carrossel": {
+    "ativo": true,
+    "paginas": [
+      "home",
+      "categoria",
+      "produto"
+    ],
+    "titulo": "Descubra cada detalhe em vídeo",
+    "videos": [
+      "exemplo-1",
+      "exemplo-2",
+      "exemplo-3",
+      "exemplo-4",
+      "exemplo-5",
+      "exemplo-6"
+    ]
+  },
+  "produto": {
+    "ativo": true,
+    "titulo": "Descubra cada detalhe em vídeo",
+    "maximo": 3,
+    "porProduto": {
+      "camiseta-off-white-premium-santa-teresinha": [
+        "exemplo-1",
+        "exemplo-4",
+        "exemplo-2"
+      ]
+    },
+    "padrao": []
+  },
+  "videos": [
+    {
+      "id": "exemplo-1",
+      "src": "videos/exemplo-1.mp4",
+      "previa": "videos/exemplo-1-previa.mp4",
+      "poster": "videos/exemplo-1.jpg",
+      "produto": "camiseta-off-white-premium-santa-teresinha"
+    },
+    {
+      "id": "exemplo-2",
+      "src": "videos/exemplo-2.mp4",
+      "previa": "videos/exemplo-2-previa.mp4",
+      "poster": "videos/exemplo-2.jpg",
+      "produto": "camiseta-off-white-premium-sao-francisco-de-assis"
+    },
+    {
+      "id": "exemplo-3",
+      "src": "videos/exemplo-3.mp4",
+      "previa": "videos/exemplo-3-previa.mp4",
+      "poster": "videos/exemplo-3.jpg",
+      "produto": "camiseta-azul-marinho-premium-nossa-senhora-aparecida"
+    },
+    {
+      "id": "exemplo-4",
+      "src": "videos/exemplo-4.mp4",
+      "previa": "videos/exemplo-4-previa.mp4",
+      "poster": "videos/exemplo-4.jpg",
+      "produto": "camiseta-off-white-premium-santa-teresinha"
+    },
+    {
+      "id": "exemplo-5",
+      "src": "videos/exemplo-5.mp4",
+      "previa": "videos/exemplo-5-previa.mp4",
+      "poster": "videos/exemplo-5.jpg",
+      "produto": "camiseta-off-white-premium-sao-francisco-de-assis"
+    },
+    {
+      "id": "exemplo-6",
+      "src": "videos/exemplo-6.mp4",
+      "previa": "videos/exemplo-6-previa.mp4",
+      "poster": "videos/exemplo-6.jpg",
+      "produto": "camiseta-azul-marinho-premium-nossa-senhora-aparecida"
+    }
+  ]
+}
