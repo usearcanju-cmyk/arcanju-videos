@@ -53,13 +53,14 @@ Se a Vercel der outro endereço (por exemplo `arcanju-videos-xyz.vercel.app`), u
 ## Opções úteis em `videos.json`
 
 - `"ativo": false` desliga tudo de uma vez.
-- `bolha.lado`: `"direita"` ou `"esquerda"`; `bolha.distanciaBaixo` em pixels; `bolha.paginas`: `home`, `categoria`, `produto` ou `todas`.
+- `bolha.lado`: `"direita"` ou `"esquerda"`; `bolha.distanciaTopo` (celular) e `bolha.distanciaTopoDesktop` em pixels; `bolha.tamanho` em pixels; `bolha.etiqueta` é o texto embaixo dela; `bolha.paginas`: `home`, `categoria`, `produto` ou `todas`. O cliente pode arrastar a bolha com o dedo; ela fica onde ele soltar enquanto navega.
+- Na página do próprio produto (normal ou baby look, pelo `porProduto`), o vídeo mostra os tamanhos e o botão `textoCarrinho` ("Adicionar ao carrinho"), que usa o botão de compra da loja. Nas outras páginas aparece `textoBotao` ("Ver produto"). Para desligar: `produto.carrinhoNoPlayer: false`.
 - `promo`: a linha da promoção no cartão do player.
 - `carrossel.seletorRodape` / `produto.seletorAntes`: seletor CSS para forçar a posição, se o tema mudar.
 
 ## Medição
 
-Cada ação envia um evento para o `dataLayer` do GTM: `arcv_abrir`, `arcv_ver`, `arcv_comprar` e `arcv_fechar_bolha`, com `arcv_video`, `arcv_produto` e `arcv_origem` (bolha, carrossel ou produto). Dá para criar acionadores com eles no GTM ou mandar para o GA4.
+Cada ação envia um evento para o `dataLayer` do GTM: `arcv_abrir`, `arcv_ver`, `arcv_comprar`, `arcv_carrinho`, `arcv_arrastar_bolha` e `arcv_fechar_bolha`, com `arcv_video`, `arcv_produto` e `arcv_origem` (bolha, carrossel ou produto). Dá para criar acionadores com eles no GTM ou mandar para o GA4.
 
 ## Leveza
 
