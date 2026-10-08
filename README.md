@@ -2,11 +2,11 @@
 
 Três lugares de vídeo na loja, ligados pelo Google Tag Manager:
 
-1. **Bolha flutuante** (canto da tela) na home e nas categorias.
+1. **Bolha flutuante** (canto direito da tela) na home, nas categorias e no produto. No produto, ela some enquanto o botão Comprar está na tela, para não cobri-lo.
 2. **Carrossel "Descubra cada detalhe em vídeo"** logo antes do rodapé.
-3. **3 bolinhas na página do produto**, entre o botão Comprar e o bloco "Compra segura".
+3. **3 bolinhas na página do produto**, entre o botão Comprar e o bloco "Compra segura" (`#apdp-selos`, da tag PDP melhorias).
 
-Tocar em qualquer um abre o **player em tela cheia** (estilo stories): passa para o lado, fecha arrastando para baixo, segura para pausar, liga e desliga o som, e mostra o cartão do produto com preço, a promoção e o botão **Comprar**. Nome, foto e preço são lidos da própria página do produto na Nuvemshop, então mudam sozinhos quando o preço muda.
+Tocar em qualquer um abre o **player em tela cheia** (estilo stories): passa para o lado, fecha arrastando para baixo, segura para pausar, liga e desliga o som, e mostra o cartão do produto com preço, a promoção e o botão **Comprar**. Nome, foto, preço (`#price_display`) e preço "de" (`#compare_price_display`) são lidos da própria página do produto na Nuvemshop, então mudam sozinhos quando o preço muda.
 
 ## Arquivos
 

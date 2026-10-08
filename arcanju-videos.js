@@ -69,27 +69,32 @@
     }).then(function (html) {
       var d = new DOMParser().parseFromString(html, 'text/html');
       var info = { nome: '', preco: 0, precoDe: 0, img: '' };
-      $$('script[type="application/ld+json"]', d).forEach(function (s) {
-        try {
-          var j = JSON.parse(s.textContent);
-          (Array.isArray(j) ? j : [j]).concat(j['@graph'] || []).forEach(function (x) {
-            if (!x || String(x['@type']).indexOf('Product') < 0) return;
+      function meta(p) { var m = d.querySelector('meta[property="' + p + '"],meta[name="' + p + '"]'); return m ? m.getAttribute('content') : ''; }
+      function num(t) { return Number(String(t || '').replace(/[^\d,]/g, '').replace(',', '.')) || 0; }
+      // 1) a página da Nuvemshop: título e foto nas metas, preço no #price_display (em centavos)
+      info.nome = meta('og:title').replace(/\s*[-|–]\s*Use Arcanju.*$/i, '');
+      info.img = meta('og:image:secure_url') || meta('og:image');
+      var pd = d.querySelector('#price_display, .js-price-display');
+      if (pd) info.preco = (Number(pd.getAttribute('data-product-price')) / 100) || num(pd.textContent);
+      var de = d.querySelector('#compare_price_display') || d.querySelector('.js-compare-price-display');
+      if (de && !/display:\s*none/.test(de.getAttribute('style') || '')) info.precoDe = num(de.textContent);
+      // 2) dados estruturados, só se forem deste produto (a página também traz os relacionados)
+      if (!info.nome || !info.preco) {
+        $$('script[type="application/ld+json"]', d).forEach(function (s) {
+          try {
+            var x = JSON.parse(s.textContent);
+            if (String(x['@type']).indexOf('Product') < 0) return;
+            var id = (x.mainEntityOfPage && (x.mainEntityOfPage['@id'] || x.mainEntityOfPage)) || (x.offers && x.offers.url) || '';
+            if (String(id).toLowerCase().indexOf('/produtos/' + slug.toLowerCase()) < 0) return;
             info.nome = info.nome || x.name || '';
-            var img = Array.isArray(x.image) ? x.image[0] : x.image;
-            info.img = info.img || (img && (img.url || img)) || '';
             var of = Array.isArray(x.offers) ? x.offers[0] : x.offers;
             if (of) info.preco = info.preco || Number(of.price || of.lowPrice || 0);
-          });
-        } catch (e) {}
-      });
-      function meta(p) { var m = d.querySelector('meta[property="' + p + '"],meta[name="' + p + '"]'); return m ? m.getAttribute('content') : ''; }
-      info.nome = info.nome || meta('og:title').replace(/\s*[-|–]\s*Use Arcanju.*$/i, '');
-      info.img = info.img || meta('og:image');
-      info.preco = info.preco || Number(meta('product:price:amount') || meta('og:price:amount') || 0);
-      var de = d.querySelector('.js-compare-price-display, [data-compare-price], .price-compare');
-      if (de) info.precoDe = Number((de.getAttribute('data-compare-price') || de.textContent).replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+          } catch (e) {}
+        });
+      }
+      info.preco = info.preco || Number(meta('product:price:amount') || 0);
       if (info.img && info.img.indexOf('//') === 0) info.img = 'https:' + info.img;
-      store('arcv_p_' + slug, JSON.stringify(info));
+      if (info.nome) store('arcv_p_' + slug, JSON.stringify(info));
       return info;
     }).catch(function () { return null; });
     return PROD[slug];
@@ -122,6 +127,7 @@
       '.arcv-bolha{position:fixed;z-index:2147483000;bottom:var(--arcv-b,20px);width:var(--arcv-t,84px);height:var(--arcv-t,84px);border-radius:50%;padding:3px;background:conic-gradient(from 210deg,var(--arcv-cor),#c9a26a,var(--arcv-cor));box-shadow:0 10px 28px -8px rgba(0,0,0,.45);transition:transform .25s ease,opacity .25s ease;animation:arcv-in .45s ease both}',
       '.arcv-bolha.dir{right:16px}.arcv-bolha.esq{left:16px}',
       '.arcv-bolha:hover{transform:scale(1.05)}',
+      '.arcv-bolha.oculta{opacity:0;transform:translateY(20px) scale(.85);pointer-events:none}',
       '.arcv-bolha .arcv-abrir{all:unset;display:block;width:100%;height:100%;border-radius:50%;overflow:hidden;border:2px solid #fff;background:#222;cursor:pointer}',
       '.arcv-bolha video,.arcv-bolha img{width:100%;height:100%;object-fit:cover;display:block}',
       '.arcv-bolha .arcv-x{position:absolute;top:-4px;right:-4px;width:22px;height:22px;border-radius:50%;border:0;background:#fff;color:#333;font-size:14px;line-height:22px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.25);padding:0}',
@@ -147,8 +153,8 @@
       /* bolinhas no produto */
       '.arcv-mini{margin:14px 0 10px}',
       '.arcv-mini .tit{font-size:14px;font-weight:600;margin:0 0 8px;color:inherit}',
-      '.arcv-mini .lista{display:flex;gap:12px}',
-      '.arcv-mini button{all:unset;cursor:pointer;width:64px;height:64px;border-radius:50%;padding:2px;background:conic-gradient(from 210deg,var(--arcv-cor),#c9a26a,var(--arcv-cor));flex:0 0 auto;transition:transform .2s}',
+      '.arcv-mini .lista{display:flex;gap:10px;flex-wrap:wrap}',
+      '.arcv-mini button{all:unset;cursor:pointer;width:var(--arcv-m,62px);height:var(--arcv-m,62px);border-radius:50%;padding:2px;background:conic-gradient(from 210deg,var(--arcv-cor),#c9a26a,var(--arcv-cor));flex:0 0 auto;transition:transform .2s}',
       '.arcv-mini button:hover{transform:scale(1.06)}',
       '.arcv-mini button:focus-visible{outline:3px solid var(--arcv-cor);outline-offset:3px}',
       '.arcv-mini .in{display:block;width:100%;height:100%;border-radius:50%;overflow:hidden;border:2px solid #fff;background:#ddd}',
@@ -283,8 +289,8 @@
           box.innerHTML = (d.img ? '<img src="' + esc(d.img) + '" alt="">' : '') +
             '<div class="tx"><div class="t">' + esc(d.nome) + '</div>' +
             (d.preco ? '<div class="p">' + brl(d.preco) + (d.precoDe > d.preco ? '<s>' + brl(d.precoDe) + '</s>' : '') + '</div>' : '') +
-            (C.promo ? '<div class="promo">' + esc(C.promo) + '</div>' : '') + '</div>' +
-            '<a href="' + esc(d.link) + '">' + esc(C.textoBotao || 'Comprar') + '</a>';
+            (C.promo && v.produto ? '<div class="promo">' + esc(C.promo) + '</div>' : '') + '</div>' +
+            '<a href="' + esc(d.link) + '">' + esc(v.textoBotao || C.textoBotao || 'Comprar') + '</a>';
           box.hidden = false;
           $('a', box).addEventListener('click', function () { track('comprar', v, { arcv_origem: origem }); });
         }
@@ -390,6 +396,13 @@
     abrirBt.addEventListener('click', function () { abrir(lista, lista[0], 'bolha'); });
     x.addEventListener('click', function (e) { e.stopPropagation(); store('arcv_bolha_fechada', '1'); w.remove(); track('fechar_bolha'); });
     document.body.appendChild(w);
+    if (tipoPagina() === 'produto' && 'IntersectionObserver' in window) {
+      var botao = $(b.seletorBotaoComprar || '.js-addtocart, [data-store="product-buy-button"]');
+      if (botao) {
+        w.classList.add('oculta');
+        new IntersectionObserver(function (e) { w.classList.toggle('oculta', e[0].isIntersecting); }, { rootMargin: '0px 0px 120px 0px' }).observe(botao);
+      }
+    }
     if (b.atrasoSegundos) { w.style.display = 'none'; setTimeout(function () { w.style.display = ''; }, b.atrasoSegundos * 1000); }
   }
 

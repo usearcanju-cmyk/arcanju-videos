@@ -11,13 +11,17 @@
     "ativa": true,
     "paginas": [
       "home",
-      "categoria"
+      "categoria",
+      "produto"
     ],
     "lado": "direita",
     "distanciaBaixo": 20,
     "tamanho": 84,
     "etiqueta": "Ver vídeo",
-    "videos": [],
+    "videos": [
+      "home-1",
+      "home-2"
+    ],
     "noProdutoUsarVideosDoProduto": true
   },
   "carrossel": {
@@ -28,14 +32,111 @@
       "produto"
     ],
     "titulo": "Descubra cada detalhe em vídeo",
-    "videos": []
+    "videos": [
+      "sao-tarcisio-1",
+      "tao-sublime-1",
+      "sao-francisco-1",
+      "sao-tarcisio-2",
+      "tao-sublime-2",
+      "home-1"
+    ]
   },
   "produto": {
     "ativo": true,
     "titulo": "Descubra cada detalhe em vídeo",
     "maximo": 3,
-    "porProduto": {},
-    "padrao": []
+    "porProduto": {
+      "camiseta-off-white-premium-sao-tarcisio": [
+        "sao-tarcisio-1",
+        "sao-tarcisio-2",
+        "home-1"
+      ],
+      "camiseta-baby-look-feminina-off-white-premium-sao-tarcisio-15b5e": [
+        "sao-tarcisio-1",
+        "sao-tarcisio-2",
+        "home-1"
+      ],
+      "camiseta-preta-premium-sanctissimum-sacramentum": [
+        "tao-sublime-1",
+        "tao-sublime-2",
+        "home-1"
+      ],
+      "camiseta-baby-look-feminina-preta-premium-sanctissimum-sacramentum-40o7p": [
+        "tao-sublime-1",
+        "tao-sublime-2",
+        "home-1"
+      ],
+      "camiseta-off-white-premium-sao-francisco-de-assis-1fvei": [
+        "sao-francisco-1",
+        "home-1",
+        "home-2"
+      ],
+      "camiseta-baby-look-feminina-off-white-premium-sao-francisco-de-assis-1q7uv": [
+        "sao-francisco-1",
+        "home-1",
+        "home-2"
+      ]
+    },
+    "padrao": [
+      "sao-tarcisio-1",
+      "tao-sublime-1",
+      "sao-francisco-1"
+    ],
+    "seletorAntes": "#apdp-selos"
   },
-  "videos": []
+  "videos": [
+    {
+      "id": "home-1",
+      "src": "videos/home-1.mp4",
+      "previa": "videos/home-1-previa.mp4",
+      "poster": "videos/home-1.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "home-2",
+      "src": "videos/home-2.mp4",
+      "previa": "videos/home-2-previa.mp4",
+      "poster": "videos/home-2.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "sao-tarcisio-1",
+      "src": "videos/sao-tarcisio-1.mp4",
+      "previa": "videos/sao-tarcisio-1-previa.mp4",
+      "poster": "videos/sao-tarcisio-1.jpg",
+      "produto": "camiseta-off-white-premium-sao-tarcisio"
+    },
+    {
+      "id": "sao-tarcisio-2",
+      "src": "videos/sao-tarcisio-2.mp4",
+      "previa": "videos/sao-tarcisio-2-previa.mp4",
+      "poster": "videos/sao-tarcisio-2.jpg",
+      "produto": "camiseta-off-white-premium-sao-tarcisio"
+    },
+    {
+      "id": "tao-sublime-1",
+      "src": "videos/tao-sublime-1.mp4",
+      "previa": "videos/tao-sublime-1-previa.mp4",
+      "poster": "videos/tao-sublime-1.jpg",
+      "produto": "camiseta-preta-premium-sanctissimum-sacramentum"
+    },
+    {
+      "id": "tao-sublime-2",
+      "src": "videos/tao-sublime-2.mp4",
+      "previa": "videos/tao-sublime-2-previa.mp4",
+      "poster": "videos/tao-sublime-2.jpg",
+      "produto": "camiseta-preta-premium-sanctissimum-sacramentum"
+    },
+    {
+      "id": "sao-francisco-1",
+      "src": "videos/sao-francisco-1.mp4",
+      "previa": "videos/sao-francisco-1-previa.mp4",
+      "poster": "videos/sao-francisco-1.jpg",
+      "produto": "camiseta-off-white-premium-sao-francisco-de-assis-1fvei"
+    }
+  ]
 }

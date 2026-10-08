@@ -11,7 +11,8 @@
     "ativa": true,
     "paginas": [
       "home",
-      "categoria"
+      "categoria",
+      "produto"
     ],
     "lado": "direita",
     "distanciaBaixo": 20,
