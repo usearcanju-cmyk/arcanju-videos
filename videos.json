@@ -99,6 +99,12 @@
         "sao-francisco-1",
         "home-1",
         "home-2"
+      ],
+      "camiseta-off-white-premium-santa-teresinha": [
+        "santa-teresinha-1"
+      ],
+      "camiseta-baby-look-feminina-off-white-premium-santa-teresinha-1go7f": [
+        "santa-teresinha-1"
       ]
     },
     "padrao": [
@@ -314,6 +320,13 @@
       "nome": "Conheça todas as camisetas",
       "link": "/produtos/",
       "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "santa-teresinha-1",
+      "src": "videos/santa-teresinha-1.mp4",
+      "previa": "videos/santa-teresinha-1-previa.mp4",
+      "poster": "videos/santa-teresinha-1.jpg",
+      "produto": "camiseta-off-white-premium-santa-teresinha"
     }
   ]
 }
