@@ -58,7 +58,16 @@
   },
   "produto": {
     "ativo": true,
-    "titulo": "Descubra cada detalhe em vídeo",
+    "titulo": "Quem comprou recomenda",
+    "recomendados": [
+      "rodape-07",
+      "rodape-11",
+      "rodape-08",
+      "recebido-01",
+      "recebido-02",
+      "recebido-03",
+      "recebido-04"
+    ],
     "maximo": 3,
     "porProduto": {
       "camiseta-off-white-premium-sao-tarcisio": [
@@ -266,6 +275,42 @@
       "src": "videos/rodape-13.mp4",
       "previa": "videos/rodape-13-previa.mp4",
       "poster": "videos/rodape-13.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "recebido-01",
+      "src": "videos/recebido-01.mp4",
+      "previa": "videos/recebido-01-previa.mp4",
+      "poster": "videos/recebido-01.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "recebido-02",
+      "src": "videos/recebido-02.mp4",
+      "previa": "videos/recebido-02-previa.mp4",
+      "poster": "videos/recebido-02.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "recebido-03",
+      "src": "videos/recebido-03.mp4",
+      "previa": "videos/recebido-03-previa.mp4",
+      "poster": "videos/recebido-03.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "recebido-04",
+      "src": "videos/recebido-04.mp4",
+      "previa": "videos/recebido-04-previa.mp4",
+      "poster": "videos/recebido-04.jpg",
       "nome": "Conheça todas as camisetas",
       "link": "/produtos/",
       "textoBotao": "Ver camisetas"

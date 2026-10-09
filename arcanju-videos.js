@@ -128,9 +128,12 @@
   function formCompra() { return $('#product_form, form.js-product-form, form[action*="/comprar"]'); }
   function botaoCompra() { var f = formCompra(); return f && $('.js-addtocart, [data-store="product-buy-button"], [type=submit]', f); }
   // o vídeo é deste produto? (vale para a versão normal e a baby look, pelo mapa porProduto)
-  function ehDestaPagina(v) {
-    if (tipoPagina() !== 'produto' || v.link || C.produto.carrinhoNoPlayer === false) return false;
+  function ehDestaPagina(v, origem) {
+    if (tipoPagina() !== 'produto' || C.produto.carrinhoNoPlayer === false) return false;
     if (!formCompra() || !botaoCompra()) return false;
+    // as bolinhas "Quem comprou recomenda" sempre vendem a camiseta da página aberta
+    if (origem === 'produto') return true;
+    if (v.link) return false;
     var s = slugAtual();
     var mapa = (C.produto.porProduto || {})[s] || [];
     return (v.produto || '').toLowerCase() === s || mapa.indexOf(v.id) >= 0;
@@ -221,7 +224,8 @@
       /* bolinhas no produto */
       '.arcv-mini{margin:14px 0 10px}',
       '.arcv-mini .tit{font-size:14px;font-weight:600;margin:0 0 8px;color:inherit}',
-      '.arcv-mini .lista{display:flex;gap:10px;flex-wrap:wrap}',
+      '.arcv-mini .lista{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:3px 2px 4px;margin:-3px -2px 0}',
+      '.arcv-mini .lista::-webkit-scrollbar{display:none}',
       '.arcv-mini button{all:unset;cursor:pointer;width:var(--arcv-m,62px);height:var(--arcv-m,62px);border-radius:50%;padding:2px;background:conic-gradient(from 210deg,var(--arcv-cor),#c9a26a,var(--arcv-cor));flex:0 0 auto;transition:transform .2s}',
       '.arcv-mini button:hover{transform:scale(1.06)}',
       '.arcv-mini button:focus-visible{outline:3px solid var(--arcv-cor);outline-offset:3px}',
@@ -376,13 +380,13 @@
       box.hidden = true;
       box.className = 'arcv-prod';
       $('.arcv-palco', raiz).classList.remove('carr');
-      function cabeca(d) {
+      function cabeca(d, carrinho) {
         return (d.img ? '<img src="' + esc(d.img) + '" alt="">' : '') +
           '<div class="tx"><div class="t">' + esc(d.nome) + '</div>' +
           (d.preco ? '<div class="p">' + brl(d.preco) + (d.precoDe > d.preco ? '<s>' + brl(d.precoDe) + '</s>' : '') + '</div>' : '') +
-          (C.promo && v.produto ? '<div class="promo">' + esc(C.promo) + '</div>' : '') + '</div>';
+          (C.promo && (v.produto || carrinho) ? '<div class="promo">' + esc(C.promo) + '</div>' : '') + '</div>';
       }
-      if (ehDestaPagina(v)) {
+      if (ehDestaPagina(v, origem)) {
         // já está na página do produto: escolhe o tamanho e adiciona ao carrinho aqui mesmo
         cartaoCarrinho(v, k, box, cabeca);
       } else {
@@ -402,7 +406,7 @@
       var escolha = {};
       box.className = 'arcv-prod carr';
       $('.arcv-palco', raiz).classList.add('carr');
-      box.innerHTML = '<div class="lin">' + cabeca(d) + '</div>' +
+      box.innerHTML = '<div class="lin">' + cabeca(d, true) + '</div>' +
         vars.map(function (g, j) {
           return '<div class="var" data-j="' + j + '"><div class="rot">' + esc(g.nome) + '</div><div class="chips">' +
             g.opcoes.map(function (o) { return '<button type="button" data-v="' + esc(o.valor) + '"' + (o.off ? ' class="esg" disabled' : '') + '>' + esc(o.texto) + '</button>'; }).join('') +
@@ -703,7 +707,9 @@
   function bolinhas() {
     var p = C.produto;
     if (!p || p.ativo === false || tipoPagina() !== 'produto') return;
-    var lista = videosDoProduto();
+    // vídeos de recebidos/unboxing: os mesmos em todas as páginas de produto
+    var lista = (p.recomendados && p.recomendados.length ? p.recomendados.filter(function (id) { return VID[id]; }) : []);
+    if (!lista.length) lista = videosDoProduto();
     if (!lista.length) return;
     function inserir() {
       if ($('.arcv-mini')) return true;
