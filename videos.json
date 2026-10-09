@@ -35,6 +35,19 @@
     ],
     "titulo": "Descubra cada detalhe em vídeo",
     "videos": [
+      "rodape-01",
+      "rodape-02",
+      "rodape-03",
+      "rodape-04",
+      "rodape-05",
+      "rodape-06",
+      "rodape-07",
+      "rodape-08",
+      "rodape-09",
+      "rodape-10",
+      "rodape-11",
+      "rodape-12",
+      "rodape-13",
       "sao-tarcisio-1",
       "tao-sublime-1",
       "sao-francisco-1",
@@ -139,6 +152,123 @@
       "previa": "videos/sao-francisco-1-previa.mp4",
       "poster": "videos/sao-francisco-1.jpg",
       "produto": "camiseta-off-white-premium-sao-francisco-de-assis-1fvei"
+    },
+    {
+      "id": "rodape-01",
+      "src": "videos/rodape-01.mp4",
+      "previa": "videos/rodape-01-previa.mp4",
+      "poster": "videos/rodape-01.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-02",
+      "src": "videos/rodape-02.mp4",
+      "previa": "videos/rodape-02-previa.mp4",
+      "poster": "videos/rodape-02.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-03",
+      "src": "videos/rodape-03.mp4",
+      "previa": "videos/rodape-03-previa.mp4",
+      "poster": "videos/rodape-03.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-04",
+      "src": "videos/rodape-04.mp4",
+      "previa": "videos/rodape-04-previa.mp4",
+      "poster": "videos/rodape-04.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-05",
+      "src": "videos/rodape-05.mp4",
+      "previa": "videos/rodape-05-previa.mp4",
+      "poster": "videos/rodape-05.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-06",
+      "src": "videos/rodape-06.mp4",
+      "previa": "videos/rodape-06-previa.mp4",
+      "poster": "videos/rodape-06.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-07",
+      "src": "videos/rodape-07.mp4",
+      "previa": "videos/rodape-07-previa.mp4",
+      "poster": "videos/rodape-07.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-08",
+      "src": "videos/rodape-08.mp4",
+      "previa": "videos/rodape-08-previa.mp4",
+      "poster": "videos/rodape-08.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-09",
+      "src": "videos/rodape-09.mp4",
+      "previa": "videos/rodape-09-previa.mp4",
+      "poster": "videos/rodape-09.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-10",
+      "src": "videos/rodape-10.mp4",
+      "previa": "videos/rodape-10-previa.mp4",
+      "poster": "videos/rodape-10.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-11",
+      "src": "videos/rodape-11.mp4",
+      "previa": "videos/rodape-11-previa.mp4",
+      "poster": "videos/rodape-11.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-12",
+      "src": "videos/rodape-12.mp4",
+      "previa": "videos/rodape-12-previa.mp4",
+      "poster": "videos/rodape-12.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
+    },
+    {
+      "id": "rodape-13",
+      "src": "videos/rodape-13.mp4",
+      "previa": "videos/rodape-13-previa.mp4",
+      "poster": "videos/rodape-13.jpg",
+      "nome": "Conheça todas as camisetas",
+      "link": "/produtos/",
+      "textoBotao": "Ver camisetas"
     }
   ]
 }
