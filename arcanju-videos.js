@@ -200,7 +200,10 @@
       '@keyframes arcv-in{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}',
       /* carrossel */
       '.arcv-sec{padding:40px 0 48px;overflow:hidden}',
-      '.arcv-sec h2{text-align:center;margin:0 16px 22px;font-size:clamp(20px,2.4vw,28px);font-weight:700;color:inherit}',
+      /* título no mesmo estilo das outras seções da loja (Compartilhe o seu look, Por dentro da Use Arcanju) */
+      '.arcv-sec .arcv-cab{max-width:1160px;margin:0 auto 22px;padding:0 16px;text-align:left}',
+      '.arcv-sec h2{display:inline-block;margin:0;font-family:var(--arc-font-display,Poppins),Poppins,sans-serif;font-weight:800;font-size:clamp(26px,4vw,40px);letter-spacing:-0.01em;line-height:1.15;color:#1c1a19;text-transform:uppercase}',
+      '.arcv-sec h2::after{content:"";display:block;width:56px;height:3px;background:var(--arc-accent,#5a332e);margin-top:14px}',
       '.arcv-trilho{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:12px 16px 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch;align-items:center}',
       '.arcv-trilho::-webkit-scrollbar{display:none}',
       '@media(min-width:900px){.arcv-trilho{padding-left:max(16px,calc((100vw - 1240px)/2));padding-right:max(16px,calc((100vw - 1240px)/2))}}',
@@ -620,6 +623,15 @@
     for (var i = 0; i < sels.length; i++) { var f = $(sels[i]); if (f) return f; }
     return null;
   }
+  // a fonte dos títulos da loja; carrega só se a página ainda não tiver
+  function fontePoppins() {
+    // se a loja já declarou a Poppins 800, o navegador baixa sozinho quando o título aparecer
+    try { if (document.fonts && Array.prototype.some.call(document.fonts, function (f) { return /poppins/i.test(f.family) && String(f.weight).indexOf('800') >= 0; })) return; } catch (e) {}
+    if ($('link[href*="family=Poppins"]')) return;
+    var l = el('link'); l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap';
+    document.head.appendChild(l);
+  }
   function carrossel() {
     var c = C.carrossel;
     if (!c || c.ativo === false || !naPagina(c.paginas)) return;
@@ -630,7 +642,8 @@
     var sec = el('section', 'arcv arcv-sec');
     sec.setAttribute('aria-label', c.titulo || 'Vídeos dos produtos');
     if (c.corFundo) sec.style.background = c.corFundo;
-    sec.innerHTML = '<h2>' + esc(c.titulo || 'Descubra cada detalhe em vídeo') + '</h2><div class="arcv-trilho"></div>' +
+    fontePoppins();
+    sec.innerHTML = '<div class="arcv-cab"><h2>' + esc(c.titulo || 'Descubra cada detalhe em vídeo') + '</h2></div><div class="arcv-trilho"></div>' +
       '<div class="arcv-setas"><button aria-label="Voltar">‹</button><button aria-label="Avançar">›</button></div>';
     var trilho = $('.arcv-trilho', sec);
     lista.forEach(function (id) {
