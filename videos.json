@@ -60,11 +60,13 @@
     "ativo": true,
     "titulo": "Veja como chega na sua casa",
     "recomendados": [
+      "influ-babinogueira-4",
+      "influ-nathblogs2-2",
       "influ-claradonegatti-1",
-      "influ-joaoacutis-1",
       "influ-isabelarubik2-1",
-      "influ-leticiasales-1",
       "influ-brunnafernanddes102-1",
+      "influ-leticiasales-1",
+      "influ-joaoacutis-1",
       "influ-clarafonseca-1"
     ],
     "maximo": 3,
@@ -407,6 +409,28 @@
         "nome": "Clara Fonseca",
         "user": "clarafonsecash",
         "slug": "clarafonseca"
+      }
+    },
+    {
+      "id": "influ-babinogueira-4",
+      "src": "videos/influ-babinogueira-4.mp4",
+      "previa": "videos/influ-babinogueira-4-previa.mp4",
+      "poster": "videos/influ-babinogueira-4.jpg",
+      "influ": {
+        "nome": "Babi Nogueira",
+        "user": "babinogueira_",
+        "slug": "babinogueira"
+      }
+    },
+    {
+      "id": "influ-nathblogs2-2",
+      "src": "videos/influ-nathblogs2-2.mp4",
+      "previa": "videos/influ-nathblogs2-2-previa.mp4",
+      "poster": "videos/influ-nathblogs2-2.jpg",
+      "influ": {
+        "nome": "Nath Blogs",
+        "user": "nathblogs_",
+        "slug": "nathblogs2"
       }
     }
   ]
