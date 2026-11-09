@@ -307,7 +307,7 @@
     .ain-home__trilho { display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
       -webkit-overflow-scrolling:touch; padding:14px 6px 22px; margin:0 -6px; }
     .ain-home__trilho::-webkit-scrollbar { display:none; }
-    .ain-home__trilho .ain-card { flex:0 0 150px; width:150px; scroll-snap-align:start; }
+    .ain-home__trilho .ain-card { flex:0 0 138px; width:138px; scroll-snap-align:start; }
     .ain-home__trilho .ain-nome { font-size:14px; }
     .ain-home__nav { display:none; }
     .ain-home__rodape { margin-top:10px; }
