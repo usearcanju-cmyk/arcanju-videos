@@ -1,13 +1,56 @@
 {
   "headers": [
-    { "source": "/videos.json", "headers": [
-      { "key": "Cache-Control", "value": "public, max-age=60, s-maxage=60" },
-      { "key": "Access-Control-Allow-Origin", "value": "*" } ] },
-    { "source": "/arcanju-videos.js", "headers": [
-      { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=300" },
-      { "key": "Access-Control-Allow-Origin", "value": "*" } ] },
-    { "source": "/videos/(.*)", "headers": [
-      { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" },
-      { "key": "Access-Control-Allow-Origin", "value": "*" } ] }
+    {
+      "source": "/videos.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=60, s-maxage=60"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/arcanju-videos.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=300"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/arcanju-influenciadores.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=300"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/videos/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    }
   ]
 }

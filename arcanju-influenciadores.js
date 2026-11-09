@@ -1,0 +1,552 @@
+/* ==========================================================================
+   Use Arcanju — Página "Influenciadores" (mural de santinhos)  |  v1
+   Prefixo: ain-
+   Roda só na página configurada em CFG.caminhos. Substitui o conteúdo da
+   página (título + texto) pelo mural. O carrossel "Descubra cada detalhe em
+   vídeo" e o resto do site não são tocados.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  if (window.__ARCANJU_INFLU__) return;
+  window.__ARCANJU_INFLU__ = true;
+
+  /* =========================================================================
+     CONFIGURAÇÃO
+     ========================================================================= */
+  var CFG = {
+    // Endereços da página na loja (com ou sem barra no final)
+    caminhos: ['/influenciadores', '/influenciadoras'],
+
+    // Onde ficam os vídeos (mesmo projeto dos vídeos de produto)
+    baseVideos: 'https://arcanju-videos.vercel.app/videos/',
+    // Cada pessoa com video:true usa:  influ-<arquivo>.mp4, influ-<arquivo>-previa.mp4, influ-<arquivo>.jpg
+    // <arquivo> = o @ sem pontos e sem "_" (ex.: babinogueira_ → babinogueira)
+
+    selo: 'Comunidade Use Arcanju',
+    titulo: 'Quem veste a fé com a gente',
+    texto: 'Criadoras e criadores católicos que já fizeram parceria com a Use Arcanju. Toque em um santinho para assistir.',
+    textoSemVideo: 'Criadoras e criadores católicos que já fizeram parceria com a Use Arcanju. Toque em um santinho para conhecer cada um.',
+
+    botaoLoja: { texto: 'Ver as camisetas', link: '/produtos/' },
+
+    convite: {
+      ativo: true,
+      titulo: 'Quer vestir a fé com a gente?',
+      texto: 'Se você cria conteúdo católico e quer fazer parceria com a Use Arcanju, fale com a gente.',
+      botao: 'Quero ser parceira(o)',
+      link: 'https://suporte.usearcanju.com.br/'
+    },
+
+    pessoas: [
+      { nome: 'Babi Nogueira',       user: 'babinogueira_',       video: false },
+      { nome: 'Anna Helena Zanella', user: 'annahelenazanella',   video: false },
+      { nome: 'Clara Donegatti',     user: 'clara.donegatti',     video: false },
+      { nome: 'Nath Blogs',          user: 'nathblogs_',          video: false },
+      { nome: 'Mariazinha',          user: 'a_mariazinhaa_',      video: false },
+      { nome: 'Eloize Mregalote',    user: 'elo_catolica_',       video: false },
+      { nome: 'Gabrielly Cruz',      user: 'gabriellycruz_oficial', video: false },
+      { nome: 'Isabela Rubik',       user: 'isabela_rubik',       video: false },
+      { nome: 'Julia Silva',         user: 'juliasiilva.daily',   video: false },
+      { nome: 'Clis Colo de Deus',   user: 'cliscolodedeus',      video: false },
+      { nome: 'Sthella Goulart',     user: 'sthellagoulart',      video: false },
+      { nome: 'Elisa Ester',         user: 'elisacavalcante_',    video: false },
+      { nome: 'Clara de Oliveira',   user: 'dailyby_clarinha',    video: false },
+      { nome: 'Bruna Fernandes',     user: 'brunnafernanddes10',  video: false },
+      { nome: 'Elena Milhomem',      user: 'elena.milhomem',      video: false },
+      { nome: 'Clara Fonseca',       user: 'clarafonsecash',      video: false },
+      { nome: 'João Acutis',         user: 'joaoacutis',          video: false },
+      { nome: 'Lavinia Tavares',     user: 'laviniatavares_',     video: false },
+      { nome: 'Clara Seabra',        user: 'clara_seabra',        video: false },
+      { nome: 'Letícia Sales',       user: 'leeticia.salles',     video: false }
+    ],
+
+    cores: {
+      vinho: '#6B1B22',
+      vinhoClaro: '#8C2A33',
+      texto: '#2B2B2B',
+      cinza: '#6F6F6F',
+      borda: '#E6E1DC',
+      creme: '#FBF8F3',
+      papel: '#F6EFE6'
+    }
+  };
+
+  // Para testes: window.ARCANJU_INFLU_TESTE = { pessoas: [...] } sobrescreve a config
+  if (window.ARCANJU_INFLU_TESTE) {
+    Object.keys(window.ARCANJU_INFLU_TESTE).forEach(function (k) { CFG[k] = window.ARCANJU_INFLU_TESTE[k]; });
+  }
+
+  /* =========================================================================
+     Helpers
+     ========================================================================= */
+  function $(s, c) { return (c || document).querySelector(s); }
+  function el(tag, cls, html) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (m) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+    });
+  }
+  function arquivo(p) { return 'influ-' + (p.arquivo || p.user.toLowerCase().replace(/[^a-z0-9]/g, '')); }
+  function urlVideo(p) { return p.src || (CFG.baseVideos + arquivo(p) + '.mp4'); }
+  function urlPrevia(p) { return p.previa || (CFG.baseVideos + arquivo(p) + '-previa.mp4'); }
+  function urlPoster(p) { return p.poster || (CFG.baseVideos + arquivo(p) + '.jpg'); }
+  function urlInsta(p) { return 'https://www.instagram.com/' + p.user + '/'; }
+  function inicial(nome) { return nome.trim().charAt(0).toUpperCase(); }
+  function evento(nome, p) {
+    try { (window.dataLayer = window.dataLayer || []).push({ event: nome, influenciador: p ? p.user : undefined }); } catch (e) {}
+  }
+  function reduzMovimento() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function naPagina() {
+    var path = location.pathname.replace(/\/+$/, '').toLowerCase();
+    return CFG.caminhos.some(function (c) { return path === c.replace(/\/+$/, '').toLowerCase(); });
+  }
+
+  var CRUZ = '<svg viewBox="0 0 64 16" aria-hidden="true"><path d="M2 8h22M40 8h22" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".55"/><path d="M32 2v12M28 6h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  var PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
+  var INSTA = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/></svg>';
+  var SOM_ON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  var SOM_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 9.5l5 5M21.5 9.5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  var FECHAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+  /* =========================================================================
+     CSS
+     ========================================================================= */
+  function injetarCSS() {
+    if ($('#ain-css')) return;
+    var c = CFG.cores;
+    var css = `
+    .ain, .ain * { box-sizing:border-box; }
+    .ain { font-family:inherit; color:${c.texto}; padding:8px 0 56px; }
+    .ain-titulo-fonte { font-family:Gabarito, inherit; }
+
+    /* Topo */
+    .ain-topo { text-align:center; max-width:640px; margin:0 auto; padding:28px 16px 8px; }
+    .ain-selo { display:inline-flex; align-items:center; gap:10px; color:${c.vinho};
+      font-size:11.5px; font-weight:700; letter-spacing:2.4px; text-transform:uppercase; }
+    .ain-selo svg { width:34px; height:10px; }
+    .ain-topo h1 { font-family:Gabarito, inherit; font-weight:800; color:${c.vinho};
+      font-size:34px; line-height:1.04; letter-spacing:-.6px; margin:14px 0 12px; text-transform:none; }
+    .ain-topo p { font-size:15px; line-height:1.55; color:${c.cinza}; margin:0 auto; max-width:480px; }
+    .ain-conta { margin-top:16px; display:inline-flex; gap:8px; align-items:center; font-size:13px;
+      color:${c.vinho}; font-weight:600; background:${c.papel}; border:1px solid ${c.borda};
+      border-radius:999px; padding:7px 14px; }
+    .ain-conta b { font-family:Gabarito, inherit; font-size:15px; }
+
+    /* Faixa com os @ */
+    .ain-faixa { margin:26px 0 30px; background:${c.vinho}; color:${c.creme}; overflow:hidden;
+      transform:rotate(-1.2deg); width:104%; margin-left:-2%; box-shadow:0 6px 18px rgba(107,27,34,.18); }
+    .ain-faixa__trilho { display:flex; width:max-content; animation:ainRola 60s linear infinite; }
+    .ain-faixa span { white-space:nowrap; font-size:13px; font-weight:600; letter-spacing:.3px; padding:11px 0; }
+    .ain-faixa i { font-style:normal; opacity:.55; padding:0 14px; }
+    @keyframes ainRola { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+
+    /* Mural */
+    .ain-mural { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:26px 14px;
+      max-width:1120px; margin:0 auto; padding:10px 14px 0; }
+    .ain-card { position:relative; display:block; text-decoration:none; color:inherit; cursor:pointer;
+      background:${c.creme}; border:1px solid rgba(107,27,34,.22); border-radius:999px 999px 14px 14px;
+      padding:8px 8px 14px; text-align:center;
+      box-shadow:0 1px 0 rgba(255,255,255,.8) inset, 0 8px 22px rgba(60,20,20,.08);
+      transform:rotate(var(--ain-r, 0deg)); transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+      opacity:0; animation:ainEntra .7s cubic-bezier(.2,.8,.2,1) forwards; animation-delay:var(--ain-d, 0s);
+      -webkit-tap-highlight-color:transparent; font:inherit; width:100%; }
+    .ain-card::after { content:''; position:absolute; inset:4px; border:1px solid rgba(107,27,34,.12);
+      border-radius:999px 999px 11px 11px; pointer-events:none; }
+    .ain-card:hover, .ain-card:focus-visible { transform:rotate(0deg) translateY(-6px);
+      box-shadow:0 18px 34px rgba(60,20,20,.16); outline:none; }
+    .ain-card:active { transform:rotate(0deg) scale(.98); }
+    @keyframes ainEntra { from { opacity:0; translate:0 18px; } to { opacity:1; translate:0 0; } }
+
+    .ain-midia { position:relative; display:block; aspect-ratio:3/4; border-radius:999px 999px 8px 8px; overflow:hidden;
+      background:linear-gradient(160deg, ${c.vinhoClaro}, ${c.vinho} 70%); isolation:isolate; }
+    .ain-midia video, .ain-midia img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+    .ain-midia video { opacity:0; transition:opacity .4s; }
+    .ain-midia video.ain-on { opacity:1; }
+    .ain-midia::after { content:''; position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(40,8,12,.45)); pointer-events:none; }
+    .ain-mono { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      font-family:Gabarito, inherit; font-weight:800; font-size:64px; color:rgba(251,248,243,.92); }
+    .ain-mono::before { content:''; position:absolute; width:62%; aspect-ratio:1; border-radius:50%;
+      border:1px solid rgba(251,248,243,.35); box-shadow:0 0 0 10px rgba(251,248,243,.06); }
+    .ain-raios { position:absolute; inset:0; opacity:.18;
+      background:repeating-conic-gradient(from 0deg at 50% 46%, rgba(255,255,255,.9) 0 2deg, transparent 2deg 12deg);
+      -webkit-mask:radial-gradient(circle at 50% 46%, #000 0 30%, transparent 62%);
+              mask:radial-gradient(circle at 50% 46%, #000 0 30%, transparent 62%); }
+    .ain-play { position:absolute; z-index:2; left:50%; bottom:10px; transform:translateX(-50%);
+      width:34px; height:34px; border-radius:50%; background:rgba(251,248,243,.94); color:${c.vinho};
+      display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.25); }
+    .ain-play svg { width:15px; height:15px; margin-left:2px; }
+    .ain-ig { position:absolute; z-index:2; left:50%; bottom:10px; transform:translateX(-50%);
+      height:28px; padding:0 11px; border-radius:999px; background:rgba(251,248,243,.94); color:${c.vinho};
+      display:flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; }
+    .ain-ig svg { width:14px; height:14px; }
+
+    .ain-orn { display:block; color:${c.vinho}; margin:11px auto 4px; width:52px; height:13px; }
+    .ain-orn svg { width:100%; height:100%; display:block; }
+    .ain-nome { display:block; font-family:Gabarito, inherit; font-weight:700; font-size:15px; line-height:1.15; color:${c.vinho};
+      padding:0 4px; }
+    .ain-user { display:block; margin-top:3px; font-size:12px; color:${c.cinza}; overflow:hidden; text-overflow:ellipsis;
+      white-space:nowrap; padding:0 6px; }
+
+    /* Convite */
+    .ain-convite { max-width:560px; margin:56px auto 0; padding:0 16px; text-align:center; }
+    .ain-convite__caixa { border:1px dashed rgba(107,27,34,.35); border-radius:16px; background:${c.papel};
+      padding:24px 20px; }
+    .ain-convite h2 { font-family:Gabarito, inherit; font-weight:800; color:${c.vinho}; font-size:22px;
+      margin:8px 0 8px; text-transform:none; letter-spacing:-.2px; }
+    .ain-convite p { margin:0 0 16px; font-size:14px; line-height:1.5; color:${c.cinza}; }
+    .ain-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; height:46px;
+      padding:0 22px; border-radius:10px; background:${c.vinho}; color:#fff !important; font-weight:700;
+      font-size:14px; text-decoration:none !important; letter-spacing:.2px; transition:background .2s; }
+    .ain-btn:hover { background:${c.vinhoClaro}; }
+
+    @media (min-width:640px) {
+      .ain-mural { grid-template-columns:repeat(3, minmax(0,1fr)); gap:34px 22px; }
+      .ain-topo h1 { font-size:44px; }
+    }
+    @media (min-width:1000px) {
+      .ain-mural { grid-template-columns:repeat(4, minmax(0,1fr)); gap:40px 28px; padding-bottom:40px; }
+      .ain-mural .ain-card:nth-child(4n+2), .ain-mural .ain-card:nth-child(4n+4) { margin-top:44px; margin-bottom:-44px; }
+      .ain-topo h1 { font-size:54px; }
+      .ain-topo { padding-top:40px; }
+      .ain-nome { font-size:16.5px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ain-faixa__trilho { animation:none; }
+      .ain-card { animation:none; opacity:1; }
+    }
+
+    /* Player (stories) */
+    .ain-st { position:fixed; inset:0; z-index:2147483000; background:#0B0707; display:flex;
+      align-items:center; justify-content:center; opacity:0; transition:opacity .25s; touch-action:none; }
+    .ain-st.ain-aberto { opacity:1; }
+    .ain-st__caixa { position:relative; height:100%; max-height:100dvh; aspect-ratio:9/16; max-width:100vw;
+      background:#000; overflow:hidden; transition:transform .25s; }
+    @media (min-width:700px) { .ain-st__caixa { height:92vh; border-radius:18px; } }
+    .ain-st video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; }
+    .ain-st__sombra { position:absolute; inset:0; pointer-events:none;
+      background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,0) 22%, rgba(0,0,0,0) 62%, rgba(0,0,0,.7)); }
+    .ain-st__barras { position:absolute; top:10px; left:10px; right:10px; display:flex; gap:4px; z-index:3; }
+    .ain-st__barras span { flex:1; height:2.5px; border-radius:2px; background:rgba(255,255,255,.35); overflow:hidden; }
+    .ain-st__barras span i { display:block; height:100%; width:0; background:#fff; }
+    .ain-st__topo { position:absolute; top:22px; left:12px; right:8px; z-index:3; display:flex; align-items:center;
+      gap:10px; color:#fff; }
+    .ain-st__av { width:36px; height:36px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center;
+      justify-content:center; background:${c.vinho}; border:2px solid ${c.creme}; font-family:Gabarito, inherit;
+      font-weight:800; font-size:16px; }
+    .ain-st__quem { flex:1; min-width:0; line-height:1.2; }
+    .ain-st__quem b { display:block; font-size:14px; }
+    .ain-st__quem a { color:rgba(255,255,255,.8) !important; font-size:12px; text-decoration:none !important; }
+    .ain-st__ic { width:40px; height:40px; border:0; background:transparent; color:#fff; display:flex;
+      align-items:center; justify-content:center; cursor:pointer; padding:0; }
+    .ain-st__ic svg { width:22px; height:22px; }
+    .ain-st__zona { position:absolute; top:70px; bottom:110px; z-index:2; }
+    .ain-st__zona--esq { left:0; width:32%; } .ain-st__zona--dir { right:0; width:68%; }
+    .ain-st__base { position:absolute; left:12px; right:12px; bottom:max(14px, env(safe-area-inset-bottom)); z-index:3;
+      display:flex; gap:8px; }
+    .ain-st__base a { flex:1; height:46px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+      gap:7px; font-size:14px; font-weight:700; text-decoration:none !important; }
+    .ain-st__base svg { width:17px; height:17px; }
+    .ain-st__insta { background:rgba(255,255,255,.14); color:#fff !important; border:1px solid rgba(255,255,255,.35);
+      -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+    .ain-st__loja { background:${c.vinho}; color:#fff !important; }
+    .ain-st__seta { display:none; }
+    @media (min-width:900px) {
+      .ain-st__seta { display:flex; position:absolute; top:50%; transform:translateY(-50%); width:48px; height:48px;
+        border-radius:50%; border:0; background:rgba(255,255,255,.12); color:#fff; cursor:pointer;
+        align-items:center; justify-content:center; font-size:22px; }
+      .ain-st__seta:hover { background:rgba(255,255,255,.22); }
+      .ain-st__seta--ant { left:calc(50% - 46vh * 9 / 16 - 76px); }
+      .ain-st__seta--prox { right:calc(50% - 46vh * 9 / 16 - 76px); }
+    }
+    body.ain-travado { overflow:hidden !important; }
+    `;
+    var s = el('style'); s.id = 'ain-css'; s.textContent = css;
+    document.head.appendChild(s);
+  }
+
+  /* =========================================================================
+     Montagem da página
+     ========================================================================= */
+  function comVideo() { return CFG.pessoas.filter(function (p) { return p.video; }); }
+
+  function montarTopo() {
+    var temVideo = comVideo().length > 0;
+    var t = el('header', 'ain-topo');
+    t.innerHTML =
+      '<div class="ain-selo">' + CRUZ.replace('viewBox="0 0 64 16"', 'viewBox="0 0 64 16" style="transform:scaleX(-1)"') +
+        esc(CFG.selo) + CRUZ + '</div>' +
+      '<h1>' + esc(CFG.titulo) + '</h1>' +
+      '<p>' + esc(temVideo ? CFG.texto : CFG.textoSemVideo) + '</p>' +
+      '<div class="ain-conta"><b>' + CFG.pessoas.length + '</b> vozes, uma mesma fé</div>';
+    return t;
+  }
+
+  function montarFaixa() {
+    var f = el('div', 'ain-faixa');
+    f.setAttribute('aria-hidden', 'true');
+    var itens = CFG.pessoas.map(function (p) { return '@' + esc(p.user); }).join('<i>✦</i>') + '<i>✦</i>';
+    f.innerHTML = '<div class="ain-faixa__trilho"><span>' + itens + '</span><span>' + itens + '</span></div>';
+    return f;
+  }
+
+  function montarCard(p, i) {
+    var temVideo = !!p.video;
+    var card = el(temVideo ? 'button' : 'a', 'ain-card');
+    if (temVideo) {
+      card.type = 'button';
+      card.setAttribute('aria-label', 'Assistir o vídeo de ' + p.nome);
+    } else {
+      card.href = urlInsta(p); card.target = '_blank'; card.rel = 'noopener';
+      card.setAttribute('aria-label', p.nome + ' no Instagram');
+    }
+    var rot = [-1.6, 1.1, -0.7, 1.5, -1.2, 0.8][i % 6];
+    card.style.setProperty('--ain-r', rot + 'deg');
+    card.style.setProperty('--ain-d', Math.min(i * 0.05, 0.8) + 's');
+
+    var midia = temVideo
+      ? '<img src="' + esc(urlPoster(p)) + '" alt="" loading="lazy">' +
+        '<video muted playsinline loop preload="none" data-src="' + esc(urlPrevia(p)) + '"></video>' +
+        '<span class="ain-play">' + PLAY + '</span>'
+      : '<span class="ain-raios"></span><span class="ain-mono">' + esc(inicial(p.nome)) + '</span>' +
+        '<span class="ain-ig">' + INSTA + 'Instagram</span>';
+
+    card.innerHTML =
+      '<span class="ain-midia">' + midia + '</span>' +
+      '<span class="ain-orn">' + CRUZ + '</span>' +
+      '<span class="ain-nome">' + esc(p.nome) + '</span>' +
+      '<span class="ain-user">@' + esc(p.user) + '</span>';
+
+    if (temVideo) {
+      card.addEventListener('click', function () { abrirPlayer(comVideo().indexOf(p)); });
+    } else {
+      card.addEventListener('click', function () { evento('influ_instagram', p); });
+    }
+    return card;
+  }
+
+  function montarConvite() {
+    var v = CFG.convite;
+    var w = el('section', 'ain-convite');
+    w.innerHTML = '<div class="ain-convite__caixa">' +
+      '<span class="ain-orn">' + CRUZ + '</span>' +
+      '<h2>' + esc(v.titulo) + '</h2><p>' + esc(v.texto) + '</p>' +
+      '<a class="ain-btn" href="' + esc(v.link) + '">' + esc(v.botao) + '</a></div>';
+    return w;
+  }
+
+  /* Prévias tocam só quando o card aparece na tela (economiza dados) */
+  function ligarPrevias(raiz) {
+    var vids = Array.prototype.slice.call(raiz.querySelectorAll('.ain-midia video'));
+    if (!vids.length || reduzMovimento()) return;
+    if (!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (e) {
+        var v = e.target;
+        if (e.isIntersecting) {
+          if (!v.src) {
+            v.src = v.getAttribute('data-src');
+            v.addEventListener('playing', function () { v.classList.add('ain-on'); }, { once: true });
+          }
+          var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: 0.35 });
+    vids.forEach(function (v) { io.observe(v); });
+  }
+
+  function montar() {
+    var conteudo = $('section.user-content') || $('.user-content');
+    if (!conteudo || $('#ain-pagina')) return !!$('#ain-pagina');
+
+    injetarCSS();
+
+    var titulo = $('[data-store="page-title"]');
+    if (titulo) titulo.style.display = 'none';
+
+    var pagina = el('div', 'ain');
+    pagina.id = 'ain-pagina';
+    pagina.appendChild(montarTopo());
+    pagina.appendChild(montarFaixa());
+
+    var mural = el('div', 'ain-mural');
+    CFG.pessoas.forEach(function (p, i) { mural.appendChild(montarCard(p, i)); });
+    pagina.appendChild(mural);
+
+    if (CFG.convite && CFG.convite.ativo) pagina.appendChild(montarConvite());
+
+    conteudo.innerHTML = '';
+    conteudo.classList.remove('pb-5');
+    conteudo.appendChild(pagina);
+
+    ligarPrevias(pagina);
+    return true;
+  }
+
+  /* =========================================================================
+     Player em tela cheia (estilo stories)
+     ========================================================================= */
+  var ST = null;
+
+  function abrirPlayer(idx) {
+    var lista = comVideo();
+    if (!lista.length || idx < 0) return;
+    fecharPlayer(true);
+
+    var o = el('div', 'ain-st');
+    o.setAttribute('role', 'dialog');
+    o.setAttribute('aria-modal', 'true');
+    o.innerHTML =
+      '<button class="ain-st__seta ain-st__seta--ant" aria-label="Anterior">‹</button>' +
+      '<div class="ain-st__caixa">' +
+        '<video playsinline preload="auto"></video>' +
+        '<div class="ain-st__sombra"></div>' +
+        '<div class="ain-st__barras">' + lista.map(function () { return '<span><i></i></span>'; }).join('') + '</div>' +
+        '<div class="ain-st__topo">' +
+          '<span class="ain-st__av"></span>' +
+          '<span class="ain-st__quem"><b></b><a target="_blank" rel="noopener"></a></span>' +
+          '<button class="ain-st__ic ain-st__som" aria-label="Som"></button>' +
+          '<button class="ain-st__ic ain-st__fechar" aria-label="Fechar">' + FECHAR + '</button>' +
+        '</div>' +
+        '<div class="ain-st__zona ain-st__zona--esq"></div><div class="ain-st__zona ain-st__zona--dir"></div>' +
+        '<div class="ain-st__base">' +
+          '<a class="ain-st__insta" target="_blank" rel="noopener">' + INSTA + 'Ver no Instagram</a>' +
+          '<a class="ain-st__loja" href="' + esc(CFG.botaoLoja.link) + '">' + esc(CFG.botaoLoja.texto) + '</a>' +
+        '</div>' +
+      '</div>' +
+      '<button class="ain-st__seta ain-st__seta--prox" aria-label="Próximo">›</button>';
+    document.body.appendChild(o);
+    document.body.classList.add('ain-travado');
+
+    ST = { o: o, lista: lista, idx: idx, v: $('video', o), mudo: false, raf: 0, segurando: false, tSeg: 0 };
+    requestAnimationFrame(function () { o.classList.add('ain-aberto'); });
+
+    var v = ST.v;
+    v.addEventListener('ended', function () { proximo(); });
+
+    $('.ain-st__fechar', o).addEventListener('click', function () { fecharPlayer(); });
+    $('.ain-st__som', o).addEventListener('click', function () {
+      ST.mudo = !ST.mudo; v.muted = ST.mudo; atualizarSom();
+    });
+    $('.ain-st__seta--ant', o).addEventListener('click', anterior);
+    $('.ain-st__seta--prox', o).addEventListener('click', proximo);
+    o.addEventListener('click', function (e) { if (e.target === o) fecharPlayer(); });
+
+    // Toque: lado esquerdo volta, direito avança, segurar pausa
+    [['.ain-st__zona--esq', anterior], ['.ain-st__zona--dir', proximo]].forEach(function (z) {
+      var zona = $(z[0], o);
+      zona.addEventListener('pointerdown', function () {
+        ST.tSeg = setTimeout(function () { ST.segurando = true; v.pause(); }, 220);
+      });
+      zona.addEventListener('pointerup', function () {
+        clearTimeout(ST.tSeg);
+        if (ST.segurando) { ST.segurando = false; tocar(); } else { z[1](); }
+      });
+      zona.addEventListener('pointerleave', function () {
+        clearTimeout(ST.tSeg);
+        if (ST.segurando) { ST.segurando = false; tocar(); }
+      });
+    });
+
+    // Arrastar para baixo fecha
+    var y0 = null, caixa = $('.ain-st__caixa', o);
+    o.addEventListener('touchstart', function (e) { y0 = e.touches[0].clientY; }, { passive: true });
+    o.addEventListener('touchmove', function (e) {
+      if (y0 == null) return;
+      var dy = Math.max(0, e.touches[0].clientY - y0);
+      caixa.style.transform = 'translateY(' + dy + 'px) scale(' + (1 - dy / 2000) + ')';
+    }, { passive: true });
+    o.addEventListener('touchend', function (e) {
+      if (y0 == null) return;
+      var dy = e.changedTouches[0].clientY - y0; y0 = null;
+      if (dy > 110) fecharPlayer(); else caixa.style.transform = '';
+    });
+
+    document.addEventListener('keydown', teclas);
+    carregar();
+    loopBarra();
+  }
+
+  function teclas(e) {
+    if (!ST) return;
+    if (e.key === 'Escape') fecharPlayer();
+    else if (e.key === 'ArrowRight') proximo();
+    else if (e.key === 'ArrowLeft') anterior();
+  }
+
+  function atualizarSom() { $('.ain-st__som', ST.o).innerHTML = ST.mudo ? SOM_OFF : SOM_ON; }
+
+  function tocar() {
+    var pr = ST.v.play();
+    if (pr && pr.catch) pr.catch(function () { ST.mudo = true; ST.v.muted = true; atualizarSom(); ST.v.play(); });
+  }
+
+  function carregar() {
+    var p = ST.lista[ST.idx], o = ST.o;
+    ST.v.poster = urlPoster(p);
+    ST.v.src = urlVideo(p);
+    ST.v.muted = ST.mudo;
+    $('.ain-st__av', o).textContent = inicial(p.nome);
+    $('.ain-st__quem b', o).textContent = p.nome;
+    var a = $('.ain-st__quem a', o); a.href = urlInsta(p); a.textContent = '@' + p.user;
+    $('.ain-st__insta', o).href = urlInsta(p);
+    var barras = o.querySelectorAll('.ain-st__barras i');
+    for (var i = 0; i < barras.length; i++) barras[i].style.width = i < ST.idx ? '100%' : '0';
+    atualizarSom();
+    tocar();
+    evento('influ_video', p);
+  }
+
+  function loopBarra() {
+    if (!ST) return;
+    var v = ST.v, b = ST.o.querySelectorAll('.ain-st__barras i')[ST.idx];
+    if (b && v.duration) b.style.width = (v.currentTime / v.duration * 100) + '%';
+    ST.raf = requestAnimationFrame(loopBarra);
+  }
+
+  function proximo() {
+    if (!ST) return;
+    if (ST.idx < ST.lista.length - 1) { ST.idx++; carregar(); } else fecharPlayer();
+  }
+  function anterior() {
+    if (!ST) return;
+    if (ST.v.currentTime > 2 || ST.idx === 0) { ST.v.currentTime = 0; tocar(); }
+    else { ST.idx--; carregar(); }
+  }
+
+  function fecharPlayer(imediato) {
+    if (!ST) return;
+    var s = ST; ST = null;
+    cancelAnimationFrame(s.raf);
+    document.removeEventListener('keydown', teclas);
+    s.v.pause(); s.v.removeAttribute('src'); s.v.load();
+    document.body.classList.remove('ain-travado');
+    if (imediato) { s.o.remove(); return; }
+    s.o.classList.remove('ain-aberto');
+    setTimeout(function () { s.o.remove(); }, 260);
+  }
+
+  /* =========================================================================
+     Boot
+     ========================================================================= */
+  function iniciar() {
+    if (!naPagina()) return;
+    if (montar()) return;
+    var n = 0;
+    var t = setInterval(function () { n++; if (montar() || n > 40) clearInterval(t); }, 250);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
+  else iniciar();
+})();
