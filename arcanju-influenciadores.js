@@ -20,7 +20,6 @@
 
     // Onde ficam os vídeos (mesmo projeto dos vídeos de produto)
     baseVideos: 'https://arcanju-videos.vercel.app/videos/',
-    // Cada pessoa com video:true usa:  influ-<arquivo>.mp4, influ-<arquivo>-previa.mp4, influ-<arquivo>.jpg
     // <arquivo> = o @ sem pontos e sem "_" (ex.: babinogueira_ → babinogueira)
 
     selo: 'Comunidade Use Arcanju',
@@ -38,28 +37,33 @@
       link: 'https://suporte.usearcanju.com.br/'
     },
 
+    // itens = sequência dos stories de cada pessoa: v = vídeo, f = foto (na ordem).
+    // Arquivos: influ-<slug>-<n>.mp4 / .jpg  (n = posição, começando em 1).
+    // Deixe itens vazio ('') para quem ainda não tem conteúdo: o santinho leva ao Instagram.
+    // Quem tem stories aparece primeiro no mural.
     pessoas: [
-      { nome: 'Babi Nogueira',       user: 'babinogueira_',       video: false },
-      { nome: 'Anna Helena Zanella', user: 'annahelenazanella',   video: false },
-      { nome: 'Clara Donegatti',     user: 'clara.donegatti',     video: false },
-      { nome: 'Nath Blogs',          user: 'nathblogs_',          video: false },
-      { nome: 'Mariazinha',          user: 'a_mariazinhaa_',      video: false },
-      { nome: 'Eloize Mregalote',    user: 'elo_catolica_',       video: false },
-      { nome: 'Gabrielly Cruz',      user: 'gabriellycruz_oficial', video: false },
-      { nome: 'Isabela Rubik',       user: 'isabela_rubik',       video: false },
-      { nome: 'Julia Silva',         user: 'juliasiilva.daily',   video: false },
-      { nome: 'Clis Colo de Deus',   user: 'cliscolodedeus',      video: false },
-      { nome: 'Sthella Goulart',     user: 'sthellagoulart',      video: false },
-      { nome: 'Elisa Ester',         user: 'elisacavalcante_',    video: false },
-      { nome: 'Clara de Oliveira',   user: 'dailyby_clarinha',    video: false },
-      { nome: 'Bruna Fernandes',     user: 'brunnafernanddes10',  video: false },
-      { nome: 'Elena Milhomem',      user: 'elena.milhomem',      video: false },
-      { nome: 'Clara Fonseca',       user: 'clarafonsecash',      video: false },
-      { nome: 'João Acutis',         user: 'joaoacutis',          video: false },
-      { nome: 'Lavinia Tavares',     user: 'laviniatavares_',     video: false },
-      { nome: 'Clara Seabra',        user: 'clara_seabra',        video: false },
-      { nome: 'Letícia Sales',       user: 'leeticia.salles',     video: false }
+      { nome: 'Babi Nogueira',       user: 'babinogueira_',         slug: 'babinogueira',       itens: 'ffvvf' },
+      { nome: 'Anna Helena Zanella', user: 'annahelenazanella',     slug: 'annahelenazanella',  itens: 'vvvvvfvvvvvvfvvfvvvvvvv' },
+      { nome: 'Clara Donegatti',     user: 'clara.donegatti',       slug: 'claradonegatti',     itens: '' },
+      { nome: 'Nath Blogs',          user: 'nathblogs_',            slug: 'nathblogs',          itens: 'vvvvf' },
+      { nome: 'Mariazinha',          user: 'a_mariazinhaa_',        slug: 'amariazinhaa',       itens: '' },
+      { nome: 'Eloize Mregalote',    user: 'elo_catolica_',         slug: 'elocatolica',        itens: '' },
+      { nome: 'Gabrielly Cruz',      user: 'gabriellycruz_oficial', slug: 'gabriellycruz',      itens: '' },
+      { nome: 'Isabela Rubik',       user: 'isabela_rubik',         slug: 'isabelarubik',       itens: 'vfvvv' },
+      { nome: 'Julia Silva',         user: 'juliasiilva.daily',     slug: 'juliasilva',         itens: '' },
+      { nome: 'Clis Colo de Deus',   user: 'cliscolodedeus',        slug: 'cliscolodedeus',     itens: '' },
+      { nome: 'Sthella Goulart',     user: 'sthellagoulart',        slug: 'sthellagoulart',     itens: 'vff' },
+      { nome: 'Elisa Ester',         user: 'elisacavalcante_',      slug: 'elisacavalcante',    itens: '' },
+      { nome: 'Clara de Oliveira',   user: 'dailyby_clarinha',      slug: 'dailybyclarinha',    itens: 'fff' },
+      { nome: 'Bruna Fernandes',     user: 'brunnafernanddes10',    slug: 'brunnafernanddes10', itens: 'vfvv' },
+      { nome: 'Elena Milhomem',      user: 'elena.milhomem',        slug: 'elenamilhomem',      itens: 'v' },
+      { nome: 'Clara Fonseca',       user: 'clarafonsecash',        slug: 'clarafonseca',       itens: '' },
+      { nome: 'João Acutis',         user: 'joaoacutis',            slug: 'joaoacutis',         itens: 'vvf' },
+      { nome: 'Lavinia Tavares',     user: 'laviniatavares_',       slug: 'laviniatavares',     itens: 'vvvvvvv' },
+      { nome: 'Clara Seabra',        user: 'clara_seabra',          slug: 'claraseabra',        itens: 'f' },
+      { nome: 'Letícia Sales',       user: 'leeticia.salles',       slug: 'leticiasales',       itens: '' }
     ],
+    segundosFoto: 6,
 
     cores: {
       vinho: '#6B1B22',
@@ -92,10 +96,13 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
     });
   }
-  function arquivo(p) { return 'influ-' + (p.arquivo || p.user.toLowerCase().replace(/[^a-z0-9]/g, '')); }
-  function urlVideo(p) { return p.src || (CFG.baseVideos + arquivo(p) + '.mp4'); }
-  function urlPrevia(p) { return p.previa || (CFG.baseVideos + arquivo(p) + '-previa.mp4'); }
-  function urlPoster(p) { return p.poster || (CFG.baseVideos + arquivo(p) + '.jpg'); }
+  function base(p, n) { return CFG.baseVideos + 'influ-' + p.slug + '-' + n; }
+  function itensDe(p) {
+    return (p.itens || '').split('').map(function (t, i) { return { tipo: t === 'v' ? 'video' : 'foto', n: i + 1 }; });
+  }
+  function urlItem(p, it) { return base(p, it.n) + (it.tipo === 'video' ? '.mp4' : '.jpg'); }
+  function urlCapa(p, it) { return base(p, it.n) + '.jpg'; }
+  function primeiroVideo(p) { return itensDe(p).filter(function (it) { return it.tipo === 'video'; })[0]; }
   function urlInsta(p) { return 'https://www.instagram.com/' + p.user + '/'; }
   function inicial(nome) { return nome.trim().charAt(0).toUpperCase(); }
   function evento(nome, p) {
@@ -260,6 +267,18 @@
       -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
     .ain-st__loja { background:${c.vinho}; color:#fff !important; }
     .ain-st__seta { display:none; }
+    .ain-st__foto { position:absolute; inset:0; display:none; background:#000; }
+    .ain-st__foto.ain-on { display:block; }
+    .ain-st__foto .ain-st__fundo { position:absolute; inset:-20px; background-size:cover; background-position:center;
+      filter:blur(22px) brightness(.55); }
+    .ain-st__foto img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+    .ain-st video.ain-off { display:none; }
+    .ain-st__caixa.ain-troca { animation:ainTroca .28s ease; }
+    @keyframes ainTroca { from { opacity:.35; transform:scale(.97); } to { opacity:1; transform:none; } }
+    .ain-qtd { position:absolute; z-index:2; top:auto; right:10px; bottom:12px; height:22px; padding:0 8px;
+      border-radius:999px; background:rgba(20,6,8,.62); color:#fff; font-size:11px; font-weight:700;
+      display:flex; align-items:center; gap:4px; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); }
+    .ain-card--story .ain-midia { box-shadow:0 0 0 2px ${c.creme}, 0 0 0 4px ${c.vinho}; }
     @media (min-width:900px) {
       .ain-st__seta { display:flex; position:absolute; top:50%; transform:translateY(-50%); width:48px; height:48px;
         border-radius:50%; border:0; background:rgba(255,255,255,.12); color:#fff; cursor:pointer;
@@ -277,10 +296,10 @@
   /* =========================================================================
      Montagem da página
      ========================================================================= */
-  function comVideo() { return CFG.pessoas.filter(function (p) { return p.video; }); }
+  function comStories() { return CFG.pessoas.filter(function (p) { return !!p.itens; }); }
 
   function montarTopo() {
-    var temVideo = comVideo().length > 0;
+    var temVideo = comStories().length > 0;
     var t = el('header', 'ain-topo');
     t.innerHTML =
       '<div class="ain-selo">' + CRUZ.replace('viewBox="0 0 64 16"', 'viewBox="0 0 64 16" style="transform:scaleX(-1)"') +
@@ -300,11 +319,11 @@
   }
 
   function montarCard(p, i) {
-    var temVideo = !!p.video;
-    var card = el(temVideo ? 'button' : 'a', 'ain-card');
-    if (temVideo) {
+    var itens = itensDe(p), tem = itens.length > 0;
+    var card = el(tem ? 'button' : 'a', 'ain-card' + (tem ? ' ain-card--story' : ''));
+    if (tem) {
       card.type = 'button';
-      card.setAttribute('aria-label', 'Assistir o vídeo de ' + p.nome);
+      card.setAttribute('aria-label', 'Ver os stories de ' + p.nome);
     } else {
       card.href = urlInsta(p); card.target = '_blank'; card.rel = 'noopener';
       card.setAttribute('aria-label', p.nome + ' no Instagram');
@@ -313,12 +332,18 @@
     card.style.setProperty('--ain-r', rot + 'deg');
     card.style.setProperty('--ain-d', Math.min(i * 0.05, 0.8) + 's');
 
-    var midia = temVideo
-      ? '<img src="' + esc(urlPoster(p)) + '" alt="" loading="lazy">' +
-        '<video muted playsinline loop preload="none" data-src="' + esc(urlPrevia(p)) + '"></video>' +
-        '<span class="ain-play">' + PLAY + '</span>'
-      : '<span class="ain-raios"></span><span class="ain-mono">' + esc(inicial(p.nome)) + '</span>' +
+    var midia;
+    if (tem) {
+      var pv = primeiroVideo(p);
+      var capa = pv ? urlCapa(p, pv) : urlCapa(p, itens[0]);
+      midia = '<img src="' + esc(capa) + '" alt="" loading="lazy">' +
+        (pv ? '<video muted playsinline loop preload="none" data-src="' + esc(base(p, pv.n) + '-previa.mp4') + '"></video>' : '') +
+        '<span class="ain-play">' + PLAY + '</span>' +
+        (itens.length > 1 ? '<span class="ain-qtd">' + itens.length + ' stories</span>' : '');
+    } else {
+      midia = '<span class="ain-raios"></span><span class="ain-mono">' + esc(inicial(p.nome)) + '</span>' +
         '<span class="ain-ig">' + INSTA + 'Instagram</span>';
+    }
 
     card.innerHTML =
       '<span class="ain-midia">' + midia + '</span>' +
@@ -326,11 +351,8 @@
       '<span class="ain-nome">' + esc(p.nome) + '</span>' +
       '<span class="ain-user">@' + esc(p.user) + '</span>';
 
-    if (temVideo) {
-      card.addEventListener('click', function () { abrirPlayer(comVideo().indexOf(p)); });
-    } else {
-      card.addEventListener('click', function () { evento('influ_instagram', p); });
-    }
+    if (tem) card.addEventListener('click', function () { abrirPlayer(comStories().indexOf(p)); });
+    else card.addEventListener('click', function () { evento('influ_instagram', p); });
     return card;
   }
 
@@ -381,7 +403,8 @@
     pagina.appendChild(montarFaixa());
 
     var mural = el('div', 'ain-mural');
-    CFG.pessoas.forEach(function (p, i) { mural.appendChild(montarCard(p, i)); });
+    var ordem = comStories().concat(CFG.pessoas.filter(function (p) { return !p.itens; }));
+    ordem.forEach(function (p, i) { mural.appendChild(montarCard(p, i)); });
     pagina.appendChild(mural);
 
     if (CFG.convite && CFG.convite.ativo) pagina.appendChild(montarConvite());
@@ -399,9 +422,9 @@
      ========================================================================= */
   var ST = null;
 
-  function abrirPlayer(idx) {
-    var lista = comVideo();
-    if (!lista.length || idx < 0) return;
+  function abrirPlayer(pIdx) {
+    var lista = comStories();
+    if (!lista.length || pIdx < 0) return;
     fecharPlayer(true);
 
     var o = el('div', 'ain-st');
@@ -411,8 +434,9 @@
       '<button class="ain-st__seta ain-st__seta--ant" aria-label="Anterior">‹</button>' +
       '<div class="ain-st__caixa">' +
         '<video playsinline preload="auto"></video>' +
+        '<div class="ain-st__foto"><div class="ain-st__fundo"></div><img alt=""></div>' +
         '<div class="ain-st__sombra"></div>' +
-        '<div class="ain-st__barras">' + lista.map(function () { return '<span><i></i></span>'; }).join('') + '</div>' +
+        '<div class="ain-st__barras"></div>' +
         '<div class="ain-st__topo">' +
           '<span class="ain-st__av"></span>' +
           '<span class="ain-st__quem"><b></b><a target="_blank" rel="noopener"></a></span>' +
@@ -429,7 +453,9 @@
     document.body.appendChild(o);
     document.body.classList.add('ain-travado');
 
-    ST = { o: o, lista: lista, idx: idx, v: $('video', o), mudo: false, raf: 0, segurando: false, tSeg: 0 };
+    ST = { o: o, lista: lista, p: pIdx, i: 0, v: $('video', o), foto: $('.ain-st__foto', o),
+           caixa: $('.ain-st__caixa', o), mudo: false, raf: 0, pausado: false, tSeg: 0,
+           fotoIni: 0, fotoAcum: 0 };
     requestAnimationFrame(function () { o.classList.add('ain-aberto'); });
 
     var v = ST.v;
@@ -443,37 +469,48 @@
     $('.ain-st__seta--prox', o).addEventListener('click', proximo);
     o.addEventListener('click', function (e) { if (e.target === o) fecharPlayer(); });
 
-    // Toque: lado esquerdo volta, direito avança, segurar pausa
+    // Toque: esquerda volta, direita avança, segurar pausa
     [['.ain-st__zona--esq', anterior], ['.ain-st__zona--dir', proximo]].forEach(function (z) {
-      var zona = $(z[0], o);
-      zona.addEventListener('pointerdown', function () {
-        ST.tSeg = setTimeout(function () { ST.segurando = true; v.pause(); }, 220);
+      var zona = $(z[0], o), px = 0, py = 0;
+      zona.addEventListener('pointerdown', function (e) {
+        px = e.clientX; py = e.clientY;
+        ST.tSeg = setTimeout(function () { ST.segurando = true; pausar(); }, 220);
       });
-      zona.addEventListener('pointerup', function () {
+      zona.addEventListener('pointerup', function (e) {
         clearTimeout(ST.tSeg);
-        if (ST.segurando) { ST.segurando = false; tocar(); } else { z[1](); }
+        var moveu = Math.abs(e.clientX - px) > 25 || Math.abs(e.clientY - py) > 25;
+        if (ST.segurando) { ST.segurando = false; continuar(); }
+        else if (!moveu) z[1]();
       });
       zona.addEventListener('pointerleave', function () {
         clearTimeout(ST.tSeg);
-        if (ST.segurando) { ST.segurando = false; tocar(); }
+        if (ST.segurando) { ST.segurando = false; continuar(); }
       });
     });
 
-    // Arrastar para baixo fecha
-    var y0 = null, caixa = $('.ain-st__caixa', o);
-    o.addEventListener('touchstart', function (e) { y0 = e.touches[0].clientY; }, { passive: true });
+    // Arrastar: para baixo fecha; para os lados troca de pessoa
+    var x0 = null, y0 = null;
+    o.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
     o.addEventListener('touchmove', function (e) {
       if (y0 == null) return;
-      var dy = Math.max(0, e.touches[0].clientY - y0);
-      caixa.style.transform = 'translateY(' + dy + 'px) scale(' + (1 - dy / 2000) + ')';
+      var dy = e.touches[0].clientY - y0, dx = e.touches[0].clientX - x0;
+      if (Math.abs(dy) > Math.abs(dx) && dy > 0) {
+        ST.caixa.style.transform = 'translateY(' + dy + 'px) scale(' + (1 - dy / 2000) + ')';
+      }
     }, { passive: true });
     o.addEventListener('touchend', function (e) {
       if (y0 == null) return;
-      var dy = e.changedTouches[0].clientY - y0; y0 = null;
-      if (dy > 110) fecharPlayer(); else caixa.style.transform = '';
+      var dy = e.changedTouches[0].clientY - y0, dx = e.changedTouches[0].clientX - x0;
+      x0 = y0 = null;
+      if (Math.abs(dy) > Math.abs(dx) && dy > 110) { fecharPlayer(); return; }
+      ST.caixa.style.transform = '';
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) proximaPessoa(); else pessoaAnterior();
+      }
     });
 
     document.addEventListener('keydown', teclas);
+    montarBarras();
     carregar();
     loopBarra();
   }
@@ -486,43 +523,107 @@
   }
 
   function atualizarSom() { $('.ain-st__som', ST.o).innerHTML = ST.mudo ? SOM_OFF : SOM_ON; }
+  function pessoa() { return ST.lista[ST.p]; }
+  function itemAtual() { return itensDe(pessoa())[ST.i]; }
 
-  function tocar() {
+  function montarBarras() {
+    var n = itensDe(pessoa()).length;
+    var html = '';
+    for (var k = 0; k < n; k++) html += '<span><i></i></span>';
+    $('.ain-st__barras', ST.o).innerHTML = html;
+  }
+
+  function tocarVideo() {
     var pr = ST.v.play();
     if (pr && pr.catch) pr.catch(function () { ST.mudo = true; ST.v.muted = true; atualizarSom(); ST.v.play(); });
   }
 
+  function pausar() {
+    ST.pausado = true;
+    if (itemAtual().tipo === 'video') ST.v.pause();
+    else { ST.fotoAcum += Date.now() - ST.fotoIni; }
+  }
+  function continuar() {
+    ST.pausado = false;
+    if (itemAtual().tipo === 'video') tocarVideo();
+    else ST.fotoIni = Date.now();
+  }
+
   function carregar() {
-    var p = ST.lista[ST.idx], o = ST.o;
-    ST.v.poster = urlPoster(p);
-    ST.v.src = urlVideo(p);
-    ST.v.muted = ST.mudo;
+    var p = pessoa(), it = itemAtual(), o = ST.o;
     $('.ain-st__av', o).textContent = inicial(p.nome);
     $('.ain-st__quem b', o).textContent = p.nome;
     var a = $('.ain-st__quem a', o); a.href = urlInsta(p); a.textContent = '@' + p.user;
     $('.ain-st__insta', o).href = urlInsta(p);
     var barras = o.querySelectorAll('.ain-st__barras i');
-    for (var i = 0; i < barras.length; i++) barras[i].style.width = i < ST.idx ? '100%' : '0';
+    for (var k = 0; k < barras.length; k++) barras[k].style.width = k < ST.i ? '100%' : '0';
     atualizarSom();
-    tocar();
-    evento('influ_video', p);
+    ST.pausado = false;
+
+    if (it.tipo === 'video') {
+      ST.foto.classList.remove('ain-on');
+      ST.v.classList.remove('ain-off');
+      ST.v.poster = urlCapa(p, it);
+      ST.v.src = urlItem(p, it);
+      ST.v.muted = ST.mudo;
+      tocarVideo();
+    } else {
+      ST.v.pause(); ST.v.removeAttribute('src'); ST.v.load();
+      ST.v.classList.add('ain-off');
+      var url = urlItem(p, it);
+      $('img', ST.foto).src = url;
+      $('.ain-st__fundo', ST.foto).style.backgroundImage = 'url("' + url + '")';
+      ST.foto.classList.add('ain-on');
+      ST.fotoIni = Date.now(); ST.fotoAcum = 0;
+    }
+    preCarregar();
+    evento('influ_story', p);
+  }
+
+  // Deixa a próxima foto/capa pronta
+  function preCarregar() {
+    var itens = itensDe(pessoa()), prox = itens[ST.i + 1];
+    var p = pessoa();
+    if (!prox && ST.lista[ST.p + 1]) { p = ST.lista[ST.p + 1]; prox = itensDe(p)[0]; }
+    if (prox) { var im = new Image(); im.src = urlCapa(p, prox); }
   }
 
   function loopBarra() {
     if (!ST) return;
-    var v = ST.v, b = ST.o.querySelectorAll('.ain-st__barras i')[ST.idx];
-    if (b && v.duration) b.style.width = (v.currentTime / v.duration * 100) + '%';
-    ST.raf = requestAnimationFrame(loopBarra);
+    var b = ST.o.querySelectorAll('.ain-st__barras i')[ST.i], it = itemAtual();
+    if (it.tipo === 'video') {
+      var v = ST.v;
+      if (b && v.duration) b.style.width = (v.currentTime / v.duration * 100) + '%';
+    } else if (!ST.pausado) {
+      var dur = (CFG.segundosFoto || 6) * 1000;
+      var t = ST.fotoAcum + (Date.now() - ST.fotoIni);
+      if (b) b.style.width = Math.min(100, t / dur * 100) + '%';
+      if (t >= dur) { proximo(); }
+    }
+    if (ST) ST.raf = requestAnimationFrame(loopBarra);
   }
 
+  function trocarPessoa(novo) {
+    ST.p = novo; ST.i = 0;
+    ST.caixa.classList.remove('ain-troca'); void ST.caixa.offsetWidth; ST.caixa.classList.add('ain-troca');
+    montarBarras(); carregar();
+  }
+  function proximaPessoa() {
+    if (ST.p < ST.lista.length - 1) trocarPessoa(ST.p + 1); else fecharPlayer();
+  }
+  function pessoaAnterior() {
+    if (ST.p > 0) trocarPessoa(ST.p - 1); else { ST.i = 0; carregar(); }
+  }
   function proximo() {
     if (!ST) return;
-    if (ST.idx < ST.lista.length - 1) { ST.idx++; carregar(); } else fecharPlayer();
+    if (ST.i < itensDe(pessoa()).length - 1) { ST.i++; carregar(); }
+    else proximaPessoa();
   }
   function anterior() {
     if (!ST) return;
-    if (ST.v.currentTime > 2 || ST.idx === 0) { ST.v.currentTime = 0; tocar(); }
-    else { ST.idx--; carregar(); }
+    if (ST.i > 0) { ST.i--; carregar(); }
+    else if (itemAtual().tipo === 'video' && ST.v.currentTime > 2) { ST.v.currentTime = 0; tocarVideo(); }
+    else pessoaAnterior();
   }
 
   function fecharPlayer(imediato) {
