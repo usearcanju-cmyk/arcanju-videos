@@ -55,7 +55,7 @@
       { nome: 'Sthella Goulart',     user: 'sthellagoulart',        slug: 'sthellagoulart',     itens: 'vff' },
       { nome: 'Elisa Ester',         user: 'elisacavalcante_',      slug: 'elisacavalcante',    itens: '' },
       { nome: 'Clara de Oliveira',   user: 'dailyby_clarinha',      slug: 'dailybyclarinha',    itens: 'fff' },
-      { nome: 'Bruna Fernandes',     user: 'brunnafernanddes10',    slug: 'brunnafernanddes102', itens: 'vvfvv' },
+      { nome: 'Bruna Fernandes',     user: 'brunafernanddes10',     slug: 'brunnafernanddes102', itens: 'vvfvv' },
       { nome: 'Elena Milhomem',      user: 'elena.milhomem',        slug: 'elenamilhomem',      itens: 'v' },
       { nome: 'Clara Fonseca',       user: 'clarafonsecash',        slug: 'clarafonseca',       itens: 'v' },
       { nome: 'João Acutis',         user: 'joaoacutis',            slug: 'joaoacutis',         itens: 'vvf' },
