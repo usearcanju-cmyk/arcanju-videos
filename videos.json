@@ -58,15 +58,14 @@
   },
   "produto": {
     "ativo": true,
-    "titulo": "Quem comprou recomenda",
+    "titulo": "Veja como chega na sua casa",
     "recomendados": [
-      "rodape-07",
-      "rodape-11",
-      "rodape-08",
-      "recebido-01",
-      "recebido-02",
-      "recebido-03",
-      "recebido-04"
+      "influ-claradonegatti-1",
+      "influ-joaoacutis-1",
+      "influ-isabelarubik2-1",
+      "influ-leticiasales-1",
+      "influ-brunnafernanddes102-1",
+      "influ-clarafonseca-1"
     ],
     "maximo": 3,
     "porProduto": {
@@ -112,7 +111,23 @@
       "tao-sublime-1",
       "sao-francisco-1"
     ],
-    "seletorAntes": "#apdp-selos"
+    "seletorAntes": "#apdp-selos",
+    "recomendadosAntigos": [
+      "rodape-07",
+      "rodape-11",
+      "rodape-08",
+      "recebido-01",
+      "recebido-02",
+      "recebido-03",
+      "recebido-04"
+    ],
+    "subtitulo": "Recebidos dos nossos influenciadores",
+    "verTodos": {
+      "texto": "Ver todos →",
+      "link": "/influenciadores/"
+    },
+    "paginaInfluenciadores": "/influenciadores/",
+    "textoVerInfluenciador": "Ver influenciador"
   },
   "videos": [
     {
@@ -327,6 +342,72 @@
       "previa": "videos/santa-teresinha-1-previa.mp4",
       "poster": "videos/santa-teresinha-1.jpg",
       "produto": "camiseta-off-white-premium-santa-teresinha"
+    },
+    {
+      "id": "influ-claradonegatti-1",
+      "src": "videos/influ-claradonegatti-1.mp4",
+      "previa": "videos/influ-claradonegatti-1-previa.mp4",
+      "poster": "videos/influ-claradonegatti-1.jpg",
+      "influ": {
+        "nome": "Clara Donegatti",
+        "user": "clara.donegatti",
+        "slug": "claradonegatti"
+      }
+    },
+    {
+      "id": "influ-joaoacutis-1",
+      "src": "videos/influ-joaoacutis-1.mp4",
+      "previa": "videos/influ-joaoacutis-1-previa.mp4",
+      "poster": "videos/influ-joaoacutis-1.jpg",
+      "influ": {
+        "nome": "João Acutis",
+        "user": "joaoacutis",
+        "slug": "joaoacutis"
+      }
+    },
+    {
+      "id": "influ-isabelarubik2-1",
+      "src": "videos/influ-isabelarubik2-1.mp4",
+      "previa": "videos/influ-isabelarubik2-1-previa.mp4",
+      "poster": "videos/influ-isabelarubik2-1.jpg",
+      "influ": {
+        "nome": "Isabela Rubik",
+        "user": "isabela_rubik",
+        "slug": "isabelarubik2"
+      }
+    },
+    {
+      "id": "influ-leticiasales-1",
+      "src": "videos/influ-leticiasales-1.mp4",
+      "previa": "videos/influ-leticiasales-1-previa.mp4",
+      "poster": "videos/influ-leticiasales-1.jpg",
+      "influ": {
+        "nome": "Letícia Sales",
+        "user": "leeticia.salles",
+        "slug": "leticiasales"
+      }
+    },
+    {
+      "id": "influ-brunnafernanddes102-1",
+      "src": "videos/influ-brunnafernanddes102-1.mp4",
+      "previa": "videos/influ-brunnafernanddes102-1-previa.mp4",
+      "poster": "videos/influ-brunnafernanddes102-1.jpg",
+      "influ": {
+        "nome": "Bruna Fernandes",
+        "user": "brunnafernanddes10",
+        "slug": "brunnafernanddes102"
+      }
+    },
+    {
+      "id": "influ-clarafonseca-1",
+      "src": "videos/influ-clarafonseca-1.mp4",
+      "previa": "videos/influ-clarafonseca-1-previa.mp4",
+      "poster": "videos/influ-clarafonseca-1.jpg",
+      "influ": {
+        "nome": "Clara Fonseca",
+        "user": "clarafonsecash",
+        "slug": "clarafonseca"
+      }
     }
   ]
 }

@@ -231,6 +231,21 @@
       '.arcv-mini button:focus-visible{outline:3px solid var(--arcv-cor);outline-offset:3px}',
       '.arcv-mini .in{display:block;width:100%;height:100%;border-radius:50%;overflow:hidden;border:2px solid #fff;background:#ddd}',
       '.arcv-mini video,.arcv-mini img{width:100%;height:100%;object-fit:cover;display:block}',
+      '.arcv-mini .cab{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 8px}',
+      '.arcv-mini .cab .tit{margin:0}',
+      '.arcv-mini .sub{display:block;font-size:12px;font-weight:400;opacity:.65;margin-top:1px}',
+      '.arcv-mini .todos{flex:0 0 auto;font-size:12px;font-weight:600;color:var(--arcv-cor)!important;text-decoration:none!important;white-space:nowrap}',
+      '.arcv-mini .item{display:flex;flex-direction:column;align-items:center;gap:5px;flex:0 0 auto;width:calc(var(--arcv-m,62px) + 8px)}',
+      '.arcv-mini .arroba{font-size:10.5px;line-height:1.1;color:inherit;opacity:.75;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.arcv-topo .quem{display:flex;align-items:center;gap:9px;color:#fff;min-width:0;text-shadow:0 1px 4px rgba(0,0,0,.5)}',
+      '.arcv-topo .quem i{font-style:normal;width:34px;height:34px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;background:var(--arcv-cor);border:2px solid #fff;font-weight:800;font-size:15px;text-shadow:none}',
+      '.arcv-topo .quem b{display:block;font-size:13.5px;line-height:1.15}',
+      '.arcv-topo .quem small{display:block;font-size:11.5px;opacity:.85}',
+      '.arcv-prod.inf{background:transparent;box-shadow:none;padding:0;gap:8px}',
+      '.arcv-prod.inf a{flex:1;text-align:center;text-transform:none;letter-spacing:0;font-size:14px;padding:13px 10px;display:flex;align-items:center;justify-content:center;gap:7px}',
+      '.arcv-prod.inf a.ig{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}',
+      '.arcv-prod.inf a.vi{background:var(--arcv-cor)}',
+      '.arcv-prod.inf svg{width:17px;height:17px;fill:none;stroke:#fff;stroke-width:1.8}',
       /* player */
       '.arcv-player{position:fixed;inset:0;z-index:2147483600;background:rgba(10,6,5,.94);display:flex;align-items:center;justify-content:center;animation:arcv-f .2s ease both;touch-action:none}',
       '@keyframes arcv-f{from{opacity:0}to{opacity:1}}',
@@ -380,6 +395,20 @@
       box.hidden = true;
       box.className = 'arcv-prod';
       $('.arcv-palco', raiz).classList.remove('carr');
+      var marca = $('.arcv-topo .marca', raiz);
+      if (v.influ) {
+        // vídeo de influenciador: mostra quem é e leva ao Instagram / à página de influenciadores
+        var inf = v.influ, ig = 'https://www.instagram.com/' + inf.user + '/';
+        marca.innerHTML = '<span class="quem"><i>' + esc(inf.nome.charAt(0)) + '</i><span><b>' + esc(inf.nome) + '</b><small>@' + esc(inf.user) + '</small></span></span>';
+        box.className = 'arcv-prod inf';
+        box.innerHTML = '<a class="ig" href="' + esc(ig) + '" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg>Ver no Instagram</a>' +
+          '<a class="vi" href="' + esc((C.produto && C.produto.paginaInfluenciadores || '/influenciadores/') + '?ver=' + encodeURIComponent(inf.slug || inf.user)) + '">' + esc((C.produto && C.produto.textoVerInfluenciador) || 'Ver influenciador') + '</a>';
+        box.hidden = false;
+        $$('a', box).forEach(function (a) { a.addEventListener('click', function () { track(a.className === 'ig' ? 'instagram' : 'influenciador', v, { arcv_origem: origem }); }); });
+        track('ver', v, { arcv_origem: origem, arcv_posicao: k + 1 });
+        return;
+      }
+      marca.textContent = C.marca || 'Use Arcanju';
       function cabeca(d, carrinho) {
         return (d.img ? '<img src="' + esc(d.img) + '" alt="">' : '') +
           '<div class="tx"><div class="t">' + esc(d.nome) + '</div>' +
@@ -716,7 +745,10 @@
       var ponto = pontoProduto();
       if (!ponto) return false;
       var w = el('div', 'arcv arcv-mini');
-      w.innerHTML = (p.titulo === '' ? '' : '<div class="tit">' + esc(p.titulo || 'Descubra cada detalhe em vídeo') + '</div>') + '<div class="lista"></div>';
+      var cab = p.titulo === '' ? '' : '<div class="tit">' + esc(p.titulo || 'Descubra cada detalhe em vídeo') +
+        (p.subtitulo ? '<span class="sub">' + esc(p.subtitulo) + '</span>' : '') + '</div>';
+      if (cab && p.verTodos) cab = '<div class="cab">' + cab + '<a class="todos" href="' + esc(p.verTodos.link) + '">' + esc(p.verTodos.texto) + '</a></div>';
+      w.innerHTML = cab + '<div class="lista"></div>';
       lista.forEach(function (id, k) {
         var b = el('button');
         b.setAttribute('aria-label', 'Ver vídeo ' + (k + 1));
@@ -724,7 +756,14 @@
         i.appendChild(miniVideo(VID[id]));
         b.appendChild(i);
         b.addEventListener('click', function (e) { semEnvio(e); abrir(lista, id, 'produto', tempoDe(b)); });
-        $('.lista', w).appendChild(b);
+        var inf = VID[id].influ;
+        if (inf) {
+          b.setAttribute('aria-label', 'Ver o recebido de ' + inf.nome);
+          var item = el('div', 'item');
+          item.appendChild(b);
+          item.appendChild(el('span', 'arroba', '@' + esc(inf.user)));
+          $('.lista', w).appendChild(item);
+        } else $('.lista', w).appendChild(b);
       });
       if (ponto.antes) ponto.antes.parentNode.insertBefore(w, ponto.antes);
       else ponto.depois.parentNode.insertBefore(w, ponto.depois.nextSibling);

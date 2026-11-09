@@ -291,6 +291,9 @@
       .ain-st__seta--prox { right:calc(50% - 46vh * 9 / 16 - 76px); }
     }
     body.ain-travado { overflow:hidden !important; }
+    .ain-card.ain-destaque { opacity:1; animation:ainDestaque 1.4s ease-in-out 3; z-index:2; }
+    @keyframes ainDestaque { 0%,100% { box-shadow:0 8px 22px rgba(60,20,20,.08), 0 0 0 0 rgba(107,27,34,.0); transform:rotate(0) scale(1); }
+      50% { box-shadow:0 18px 34px rgba(60,20,20,.18), 0 0 0 6px rgba(107,27,34,.28); transform:rotate(0) scale(1.04); } }
     `;
     var s = el('style'); s.id = 'ain-css'; s.textContent = css;
     document.head.appendChild(s);
@@ -324,6 +327,7 @@
   function montarCard(p, i) {
     var itens = itensDe(p), tem = itens.length > 0;
     var card = el(tem ? 'button' : 'a', 'ain-card' + (tem ? ' ain-card--story' : ''));
+    card.setAttribute('data-slug', p.slug);
     if (tem) {
       card.type = 'button';
       card.setAttribute('aria-label', 'Ver os stories de ' + p.nome);
@@ -366,6 +370,20 @@
       '<h2>' + esc(v.titulo) + '</h2><p>' + esc(v.texto) + '</p>' +
       '<a class="ain-btn" href="' + esc(v.link) + '">' + esc(v.botao) + '</a></div>';
     return w;
+  }
+
+  /* Veio do "Ver influenciador" (?ver=slug): rola até o santinho e destaca */
+  function destacarVindo() {
+    var m = location.search.match(/[?&]ver=([^&]+)/);
+    if (!m) return;
+    var slug = decodeURIComponent(m[1]);
+    var card = document.querySelector('.ain-card[data-slug="' + slug.replace(/"/g, '') + '"]');
+    if (!card) return;
+    setTimeout(function () {
+      card.scrollIntoView({ behavior: reduzMovimento() ? 'auto' : 'smooth', block: 'center' });
+      card.classList.add('ain-destaque');
+      setTimeout(function () { card.classList.remove('ain-destaque'); }, 4200);
+    }, 450);
   }
 
   /* Prévias tocam só quando o card aparece na tela (economiza dados) */
@@ -416,6 +434,7 @@
     conteudo.appendChild(pagina);
 
     ligarPrevias(pagina);
+    destacarVindo();
     return true;
   }
 
