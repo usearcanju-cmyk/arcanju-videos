@@ -40,9 +40,9 @@
     // itens = sequência dos stories de cada pessoa: v = vídeo, f = foto (na ordem).
     // Arquivos: influ-<slug>-<n>.mp4 / .jpg  (n = posição, começando em 1).
     // Deixe itens vazio ('') para quem ainda não tem conteúdo: o santinho leva ao Instagram.
-    // Quem tem stories aparece primeiro no mural.
+    // Quem tem stories aparece primeiro no mural. capa: n = qual vídeo vira a capa (padrão: o primeiro vídeo).
     pessoas: [
-      { nome: 'Babi Nogueira',       user: 'babinogueira_',         slug: 'babinogueira',       itens: 'ffvvf' },
+      { nome: 'Babi Nogueira',       user: 'babinogueira_',         slug: 'babinogueira',       itens: 'ffvvf', capa: 4 },
       { nome: 'Anna Helena Zanella', user: 'annahelenazanella',     slug: 'annahelenazanella',  itens: 'vvvvvfvvvvvvfvvfvvvvvvv' },
       { nome: 'Clara Donegatti',     user: 'clara.donegatti',       slug: 'claradonegatti',     itens: 'vvvvv' },
       { nome: 'Nath Blogs',          user: 'nathblogs_',            slug: 'nathblogs2',         itens: 'vvvvvf' },
@@ -374,7 +374,7 @@
 
     var midia;
     if (tem) {
-      var pv = primeiroVideo(p);
+      var pv = p.capa ? itens[p.capa - 1] : primeiroVideo(p);
       var capa = pv ? urlCapa(p, pv) : urlCapa(p, itens[0]);
       midia = '<img src="' + esc(capa) + '" alt="" loading="lazy">' +
         (pv ? '<video muted playsinline loop preload="none" data-src="' + esc(base(p, pv.n) + '-previa.mp4') + '"></video>' : '') +
