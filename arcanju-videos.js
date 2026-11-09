@@ -235,7 +235,7 @@
       '.arcv-mini .cab .tit{margin:0}',
       '.arcv-mini .sub{display:block;font-size:12px;font-weight:400;opacity:.65;margin-top:1px}',
       '.arcv-mini .todos{flex:0 0 auto;font-size:12px;font-weight:600;color:var(--arcv-cor)!important;text-decoration:none!important;white-space:nowrap}',
-      '.arcv-mini .item{display:flex;flex-direction:column;align-items:center;gap:5px;flex:0 0 auto;width:78px}',
+      '.arcv-mini .item{display:flex;flex-direction:column;align-items:center;gap:5px;flex:0 0 auto;width:84px}',
       '.arcv-mini .item button{width:70px;height:70px}',
       '.arcv-mini .arroba{font-size:10.5px;line-height:1.2;color:inherit;opacity:.8;max-width:100%;text-align:center;overflow-wrap:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
       '.arcv-topo .quem{display:flex;align-items:center;gap:9px;color:#fff;min-width:0;text-shadow:0 1px 4px rgba(0,0,0,.5)}',
