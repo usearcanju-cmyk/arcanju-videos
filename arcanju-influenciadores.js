@@ -379,9 +379,13 @@
     var slug = decodeURIComponent(m[1]);
     var card = document.querySelector('.ain-card[data-slug="' + slug.replace(/"/g, '') + '"]');
     if (!card) return;
+    function alvo() { var r = card.getBoundingClientRect(); return Math.max(0, r.top + window.pageYOffset - (window.innerHeight - r.height) / 2); }
+    function chegou() { var r = card.getBoundingClientRect(); return r.top >= 0 && r.bottom <= window.innerHeight; }
     setTimeout(function () {
-      card.scrollIntoView({ behavior: reduzMovimento() ? 'auto' : 'smooth', block: 'center' });
+      try { window.scrollTo({ top: alvo(), behavior: reduzMovimento() ? 'auto' : 'smooth' }); } catch (e) { window.scrollTo(0, alvo()); }
       card.classList.add('ain-destaque');
+      // plano B: se a rolagem suave não aconteceu, pula direto
+      setTimeout(function () { if (!chegou()) window.scrollTo(0, alvo()); }, 1000);
       setTimeout(function () { card.classList.remove('ain-destaque'); }, 4200);
     }, 450);
   }
