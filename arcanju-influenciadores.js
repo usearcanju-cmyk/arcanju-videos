@@ -44,24 +44,25 @@
     pessoas: [
       { nome: 'Babi Nogueira',       user: 'babinogueira_',         slug: 'babinogueira',       itens: 'ffvvf' },
       { nome: 'Anna Helena Zanella', user: 'annahelenazanella',     slug: 'annahelenazanella',  itens: 'vvvvvfvvvvvvfvvfvvvvvvv' },
-      { nome: 'Clara Donegatti',     user: 'clara.donegatti',       slug: 'claradonegatti',     itens: '' },
-      { nome: 'Nath Blogs',          user: 'nathblogs_',            slug: 'nathblogs',          itens: 'vvvvf' },
-      { nome: 'Mariazinha',          user: 'a_mariazinhaa_',        slug: 'amariazinhaa',       itens: '' },
-      { nome: 'Eloize Mregalote',    user: 'elo_catolica_',         slug: 'elocatolica',        itens: '' },
-      { nome: 'Gabrielly Cruz',      user: 'gabriellycruz_oficial', slug: 'gabriellycruz',      itens: '' },
-      { nome: 'Isabela Rubik',       user: 'isabela_rubik',         slug: 'isabelarubik',       itens: 'vfvvv' },
+      { nome: 'Clara Donegatti',     user: 'clara.donegatti',       slug: 'claradonegatti',     itens: 'vvvvv' },
+      { nome: 'Nath Blogs',          user: 'nathblogs_',            slug: 'nathblogs2',         itens: 'vvvvvf' },
+      { nome: 'Mariazinha',          user: 'a_mariazinhaa_',        slug: 'amariazinhaa',       itens: 'vvv' },
+      { nome: 'Eloize Mregalote',    user: 'elo_catolica_',         slug: 'elocatolica',        itens: 'vvv' },
+      { nome: 'Gabrielly Cruz',      user: 'gabriellycruz_oficial', slug: 'gabriellycruz',      itens: 'v' },
+      { nome: 'Isabela Rubik',       user: 'isabela_rubik',         slug: 'isabelarubik2',      itens: 'vvfvvv' },
       { nome: 'Julia Silva',         user: 'juliasiilva.daily',     slug: 'juliasilva',         itens: '' },
-      { nome: 'Clis Colo de Deus',   user: 'cliscolodedeus',        slug: 'cliscolodedeus',     itens: '' },
+      { nome: 'Clis Colo de Deus',   user: 'cliscolodedeus',        slug: 'cliscolodedeus',     itens: 'v' },
       { nome: 'Sthella Goulart',     user: 'sthellagoulart',        slug: 'sthellagoulart',     itens: 'vff' },
       { nome: 'Elisa Ester',         user: 'elisacavalcante_',      slug: 'elisacavalcante',    itens: '' },
       { nome: 'Clara de Oliveira',   user: 'dailyby_clarinha',      slug: 'dailybyclarinha',    itens: 'fff' },
-      { nome: 'Bruna Fernandes',     user: 'brunnafernanddes10',    slug: 'brunnafernanddes10', itens: 'vfvv' },
+      { nome: 'Bruna Fernandes',     user: 'brunnafernanddes10',    slug: 'brunnafernanddes102', itens: 'vvfvv' },
       { nome: 'Elena Milhomem',      user: 'elena.milhomem',        slug: 'elenamilhomem',      itens: 'v' },
-      { nome: 'Clara Fonseca',       user: 'clarafonsecash',        slug: 'clarafonseca',       itens: '' },
+      { nome: 'Clara Fonseca',       user: 'clarafonsecash',        slug: 'clarafonseca',       itens: 'v' },
       { nome: 'João Acutis',         user: 'joaoacutis',            slug: 'joaoacutis',         itens: 'vvf' },
       { nome: 'Lavinia Tavares',     user: 'laviniatavares_',       slug: 'laviniatavares',     itens: 'vvvvvvv' },
       { nome: 'Clara Seabra',        user: 'clara_seabra',          slug: 'claraseabra',        itens: 'f' },
-      { nome: 'Letícia Sales',       user: 'leeticia.salles',       slug: 'leticiasales',       itens: '' }
+      { nome: 'Letícia Sales',       user: 'leeticia.salles',       slug: 'leticiasales',       itens: 'v' },
+      { nome: 'Gica',                user: 'itss.gica',             slug: 'itssgica',           itens: 'v' }
     ],
     segundosFoto: 6,
 
@@ -340,9 +341,7 @@
       var capa = pv ? urlCapa(p, pv) : urlCapa(p, itens[0]);
       midia = '<img src="' + esc(capa) + '" alt="" loading="lazy">' +
         (pv ? '<video muted playsinline loop preload="none" data-src="' + esc(base(p, pv.n) + '-previa.mp4') + '"></video>' : '') +
-        (itens.length > 1
-          ? '<span class="ain-qtd">' + PLAY + itens.length + ' stories</span>'
-          : '<span class="ain-play">' + PLAY + '</span>');
+        '<span class="ain-play">' + PLAY + '</span>';
     } else {
       midia = '<span class="ain-raios"></span><span class="ain-mono">' + esc(inicial(p.nome)) + '</span>' +
         '<span class="ain-ig">' + INSTA + 'Instagram</span>';
