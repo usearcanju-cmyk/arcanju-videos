@@ -40,9 +40,9 @@
     // itens = sequência dos stories de cada pessoa: v = vídeo, f = foto (na ordem).
     // Arquivos: influ-<slug>-<n>.mp4 / .jpg  (n = posição, começando em 1).
     // Deixe itens vazio ('') para quem ainda não tem conteúdo: o santinho leva ao Instagram.
-    // Quem tem stories aparece primeiro no mural.
+    // Quem tem stories aparece primeiro no mural. capa: n = qual vídeo vira a capa (padrão: o primeiro vídeo).
     pessoas: [
-      { nome: 'Babi Nogueira',       user: 'babinogueira_',         slug: 'babinogueira',       itens: 'ffvvf' },
+      { nome: 'Babi Nogueira',       user: 'babinogueira_',         slug: 'babinogueira',       itens: 'ffvvf', capa: 4 },
       { nome: 'Anna Helena Zanella', user: 'annahelenazanella',     slug: 'annahelenazanella',  itens: 'vvvvvfvvvvvvfvvfvvvvvvv' },
       { nome: 'Clara Donegatti',     user: 'clara.donegatti',       slug: 'claradonegatti',     itens: 'vvvvv' },
       { nome: 'Nath Blogs',          user: 'nathblogs_',            slug: 'nathblogs2',         itens: 'vvvvvf' },
@@ -65,6 +65,16 @@
       { nome: 'Gica',                user: 'itss.gica',             slug: 'itssgica',           itens: 'v' }
     ],
     segundosFoto: 6,
+
+    // Seção na página inicial (abaixo de "Por dentro da Use Arcanju")
+    home: {
+      ativo: true,
+      titulo: 'QUEM VESTE A FÉ COM A GENTE',
+      texto: 'Criadoras e criadores católicos que receberam e vestem a Use Arcanju. Toque em um santinho para assistir.',
+      botao: 'Conhecer todos os influenciadores',
+      link: '/influenciadores/',
+      depoisDe: '.arcanju-production'   // seção que fica acima
+    },
 
     cores: {
       vinho: '#6B1B22',
@@ -291,6 +301,29 @@
       .ain-st__seta--prox { right:calc(50% - 46vh * 9 / 16 - 76px); }
     }
     body.ain-travado { overflow:hidden !important; }
+    .ain-home { padding:64px 20px; box-sizing:border-box; }
+    .ain-home .arc-head { margin-bottom:22px; }
+    .ain-home__trilho-wrap { position:relative; }
+    .ain-home__trilho { display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
+      -webkit-overflow-scrolling:touch; padding:14px 6px 22px; margin:0 -6px; }
+    .ain-home__trilho::-webkit-scrollbar { display:none; }
+    .ain-home__trilho .ain-card { flex:0 0 138px; width:138px; scroll-snap-align:start; }
+    .ain-home__trilho .ain-nome { font-size:14px; }
+    .ain-home__nav { display:none; }
+    .ain-home__rodape { margin-top:10px; }
+    .ain-home__link { display:inline-flex; align-items:center; gap:8px; height:46px; padding:0 22px; border-radius:10px;
+      background:${c.vinho}; color:#fff !important; font-weight:700; font-size:14px; text-decoration:none !important;
+      transition:background .2s; }
+    .ain-home__link:hover { background:${c.vinhoClaro}; }
+    @media (max-width:640px) { .ain-home { padding:44px 16px; } }
+    @media (min-width:900px) {
+      .ain-home__trilho .ain-card { flex-basis:190px; width:190px; }
+      .ain-home__nav { display:flex; position:absolute; top:42%; transform:translateY(-50%); z-index:3; width:44px; height:44px;
+        border-radius:50%; border:1px solid ${c.borda}; background:#fff; color:${c.texto}; font-size:22px; cursor:pointer;
+        align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(0,0,0,.08); }
+      .ain-home__nav:hover { border-color:${c.vinho}; color:${c.vinho}; }
+      .ain-home__nav--ant { left:-14px; } .ain-home__nav--prox { right:-14px; }
+    }
     .ain-card.ain-destaque { opacity:1; animation:ainDestaque 1.4s ease-in-out 3; z-index:2; }
     @keyframes ainDestaque { 0%,100% { box-shadow:0 8px 22px rgba(60,20,20,.08), 0 0 0 0 rgba(107,27,34,.0); transform:rotate(0) scale(1); }
       50% { box-shadow:0 18px 34px rgba(60,20,20,.18), 0 0 0 6px rgba(107,27,34,.28); transform:rotate(0) scale(1.04); } }
@@ -341,7 +374,7 @@
 
     var midia;
     if (tem) {
-      var pv = primeiroVideo(p);
+      var pv = p.capa ? itens[p.capa - 1] : primeiroVideo(p);
       var capa = pv ? urlCapa(p, pv) : urlCapa(p, itens[0]);
       midia = '<img src="' + esc(capa) + '" alt="" loading="lazy">' +
         (pv ? '<video muted playsinline loop preload="none" data-src="' + esc(base(p, pv.n) + '-previa.mp4') + '"></video>' : '') +
@@ -666,7 +699,61 @@
   /* =========================================================================
      Boot
      ========================================================================= */
+  /* =========================================================================
+     Seção na página inicial
+     ========================================================================= */
+  function ehHome() {
+    return location.pathname === '/' || (document.body && document.body.classList.contains('template-home'));
+  }
+
+  function montarHome() {
+    var h = CFG.home;
+    if (!h || !h.ativo) return true;
+    if ($('#ain-home')) return true;
+    var acima = $(h.depoisDe);
+    if (!acima) return false;
+    injetarCSS();
+
+    var sec = el('div', 'ain ain-home');
+    sec.id = 'ain-home';
+    // usa as mesmas cores e fontes da seção de cima
+    var cs = getComputedStyle(acima);
+    ['--arc-bg', '--arc-text', '--arc-text-muted', '--arc-accent', '--arc-font-body', '--arc-font-display'].forEach(function (v) {
+      var val = cs.getPropertyValue(v); if (val) sec.style.setProperty(v, val.trim());
+    });
+    sec.style.background = cs.backgroundColor;
+    sec.style.color = cs.color;
+    sec.style.fontFamily = cs.fontFamily;
+
+    sec.innerHTML =
+      '<section class="arc-section">' +
+        '<header class="arc-head"><h2 class="arc-title">' + esc(h.titulo) + '</h2>' +
+        '<p class="arc-text">' + esc(h.texto) + '</p></header>' +
+        '<div class="ain-home__trilho-wrap">' +
+          '<button type="button" class="ain-home__nav ain-home__nav--ant" aria-label="Anteriores">‹</button>' +
+          '<div class="ain-home__trilho"></div>' +
+          '<button type="button" class="ain-home__nav ain-home__nav--prox" aria-label="Próximos">›</button>' +
+        '</div>' +
+        '<div class="ain-home__rodape"><a class="ain-home__link" href="' + esc(h.link) + '">' + esc(h.botao) + ' →</a></div>' +
+      '</section>';
+
+    var trilho = $('.ain-home__trilho', sec);
+    comStories().forEach(function (p, i) { trilho.appendChild(montarCard(p, i)); });
+    $('.ain-home__nav--ant', sec).addEventListener('click', function () { trilho.scrollBy({ left: -trilho.clientWidth * 0.8, behavior: 'smooth' }); });
+    $('.ain-home__nav--prox', sec).addEventListener('click', function () { trilho.scrollBy({ left: trilho.clientWidth * 0.8, behavior: 'smooth' }); });
+
+    acima.parentNode.insertBefore(sec, acima.nextSibling);
+    ligarPrevias(sec);
+    return true;
+  }
+
   function iniciar() {
+    if (ehHome() && !naPagina()) {
+      if (montarHome()) return;
+      var k = 0;
+      var tt = setInterval(function () { k++; if (montarHome() || k > 60) clearInterval(tt); }, 250);
+      return;
+    }
     if (!naPagina()) return;
     if (montar()) return;
     var n = 0;
