@@ -756,7 +756,21 @@
         var i = el('span', 'in');
         i.appendChild(miniVideo(VID[id]));
         b.appendChild(i);
-        b.addEventListener('click', function (e) { semEnvio(e); abrir(lista, id, 'produto', tempoDe(b)); });
+        b.addEventListener('click', function (e) {
+          semEnvio(e);
+          // influenciador: abre todos os stories dele (só dele), começando pelo vídeo da bolinha
+          var inf0 = VID[id].influ, api = window.ArcanjuInfluenciadores;
+          if (inf0 && api) {
+            var m = String(id).match(/-(\d+)$/);
+            var pag = (C.produto && C.produto.paginaInfluenciadores) || '/influenciadores/';
+            var ok = api.abrir(inf0.slug, {
+              inicio: m ? Number(m[1]) - 1 : 0,
+              botao: { texto: (C.produto && C.produto.textoVerInfluenciador) || 'Ver influenciador', link: pag + '?ver=' + encodeURIComponent(inf0.slug) }
+            });
+            if (ok) { track('ver', VID[id], { arcv_origem: 'produto-influ' }); return; }
+          }
+          abrir(lista, id, 'produto', tempoDe(b));
+        });
         var inf = VID[id].influ;
         if (inf) {
           b.setAttribute('aria-label', 'Ver o recebido de ' + inf.nome);
