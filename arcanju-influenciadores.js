@@ -480,9 +480,15 @@
      ========================================================================= */
   var ST = null;
 
-  function abrirPlayer(pIdx) {
-    var lista = comStories();
-    if (!lista.length || pIdx < 0) return;
+  // Abre os stories de UMA pessoa (não passa para outra; ao terminar, fecha).
+  // opts.inicio = posição do primeiro story (0 = começo); opts.botao = { texto, link } do botão da direita
+  function abrirPlayer(pIdx, opts) {
+    opts = opts || {};
+    var todas = comStories();
+    if (!todas.length || pIdx < 0 || !todas[pIdx]) return;
+    var lista = [todas[pIdx]];
+    var botao = opts.botao || CFG.botaoLoja;
+    injetarCSS();
     fecharPlayer(true);
 
     var o = el('div', 'ain-st');
@@ -504,14 +510,14 @@
         '<div class="ain-st__zona ain-st__zona--esq"></div><div class="ain-st__zona ain-st__zona--dir"></div>' +
         '<div class="ain-st__base">' +
           '<a class="ain-st__insta" target="_blank" rel="noopener">' + INSTA + 'Ver no Instagram</a>' +
-          '<a class="ain-st__loja" href="' + esc(CFG.botaoLoja.link) + '">' + esc(CFG.botaoLoja.texto) + '</a>' +
+          '<a class="ain-st__loja" href="' + esc(botao.link) + '">' + esc(botao.texto) + '</a>' +
         '</div>' +
       '</div>' +
       '<button class="ain-st__seta ain-st__seta--prox" aria-label="Próximo">›</button>';
     document.body.appendChild(o);
     document.body.classList.add('ain-travado');
 
-    ST = { o: o, lista: lista, p: pIdx, i: 0, v: $('video', o), foto: $('.ain-st__foto', o),
+    ST = { o: o, lista: lista, p: 0, i: Math.max(0, Math.min(opts.inicio || 0, itensDe(lista[0]).length - 1)), v: $('video', o), foto: $('.ain-st__foto', o),
            caixa: $('.ain-st__caixa', o), mudo: false, raf: 0, pausado: false, tSeg: 0,
            fotoIni: 0, fotoAcum: 0 };
     requestAnimationFrame(function () { o.classList.add('ain-aberto'); });
@@ -546,7 +552,7 @@
       });
     });
 
-    // Arrastar: para baixo fecha; para os lados troca de pessoa
+    // Arrastar: para baixo fecha; para os lados passa/volta o story
     var x0 = null, y0 = null;
     o.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
     o.addEventListener('touchmove', function (e) {
@@ -563,7 +569,7 @@
       if (Math.abs(dy) > Math.abs(dx) && dy > 110) { fecharPlayer(); return; }
       ST.caixa.style.transform = '';
       if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
-        if (dx < 0) proximaPessoa(); else pessoaAnterior();
+        if (dx < 0) proximo(); else anterior();
       }
     });
 
@@ -746,6 +752,15 @@
     ligarPrevias(sec);
     return true;
   }
+
+  // Usado pelas bolinhas da página de produto (arcanju-videos.js)
+  window.ArcanjuInfluenciadores = {
+    abrir: function (slug, opts) {
+      var lista = comStories();
+      for (var k = 0; k < lista.length; k++) if (lista[k].slug === slug) { abrirPlayer(k, opts); return true; }
+      return false;
+    }
+  };
 
   function iniciar() {
     if (ehHome() && !naPagina()) {
