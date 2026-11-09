@@ -275,9 +275,11 @@
     .ain-st video.ain-off { display:none; }
     .ain-st__caixa.ain-troca { animation:ainTroca .28s ease; }
     @keyframes ainTroca { from { opacity:.35; transform:scale(.97); } to { opacity:1; transform:none; } }
-    .ain-qtd { position:absolute; z-index:2; top:auto; right:10px; bottom:12px; height:22px; padding:0 8px;
-      border-radius:999px; background:rgba(20,6,8,.62); color:#fff; font-size:11px; font-weight:700;
-      display:flex; align-items:center; gap:4px; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); }
+    .ain-qtd { position:absolute; z-index:2; left:50%; bottom:10px; transform:translateX(-50%); height:28px;
+      padding:0 11px 0 9px; border-radius:999px; background:rgba(251,248,243,.94); color:${c.vinho};
+      font-size:11.5px; font-weight:700; white-space:nowrap; display:flex; align-items:center; gap:5px;
+      box-shadow:0 4px 12px rgba(0,0,0,.25); }
+    .ain-qtd svg { width:12px; height:12px; }
     .ain-card--story .ain-midia { box-shadow:0 0 0 2px ${c.creme}, 0 0 0 4px ${c.vinho}; }
     @media (min-width:900px) {
       .ain-st__seta { display:flex; position:absolute; top:50%; transform:translateY(-50%); width:48px; height:48px;
@@ -338,8 +340,9 @@
       var capa = pv ? urlCapa(p, pv) : urlCapa(p, itens[0]);
       midia = '<img src="' + esc(capa) + '" alt="" loading="lazy">' +
         (pv ? '<video muted playsinline loop preload="none" data-src="' + esc(base(p, pv.n) + '-previa.mp4') + '"></video>' : '') +
-        '<span class="ain-play">' + PLAY + '</span>' +
-        (itens.length > 1 ? '<span class="ain-qtd">' + itens.length + ' stories</span>' : '');
+        (itens.length > 1
+          ? '<span class="ain-qtd">' + PLAY + itens.length + ' stories</span>'
+          : '<span class="ain-play">' + PLAY + '</span>');
     } else {
       midia = '<span class="ain-raios"></span><span class="ain-mono">' + esc(inicial(p.nome)) + '</span>' +
         '<span class="ain-ig">' + INSTA + 'Instagram</span>';
